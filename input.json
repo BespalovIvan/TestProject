@@ -1,0 +1,21 @@
+{
+  "criterias": [
+    {
+      "lastName": "Ivanov"
+    },
+    {
+      "lastName": "Pestov"
+    },
+    {
+      "productName": "Milk",
+      "minTimes": 5
+    },
+    {
+      "minExpenses": 10,
+      "maxExpenses": 70
+    },
+    {
+      "badCustomers": 3
+    }
+  ]
+}
