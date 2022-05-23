@@ -43,6 +43,8 @@ public class DBRepository {
         return customers;
     }
 
+
+
     private void findGroupByCustomerNameAndMinCount(){
         String productName;
         String minTimes;
