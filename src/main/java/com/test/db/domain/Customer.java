@@ -1,15 +1,12 @@
 package com.test.db.domain;
 
 public class Customer {
+
     private Integer id;
     private String firstname;
     private String lastname;
 
-    public Customer(){
-
-    }
     public Customer(Integer id, String username,String lastname){
-
         this.id = id;
         this.firstname = username;
         this.lastname = lastname;
@@ -46,4 +43,5 @@ public class Customer {
                 + ", lastname: " + lastname
                 + "}";
     }
+
 }

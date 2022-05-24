@@ -1,4 +1,4 @@
-package com.test.db;
+package com.test.db.config;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,9 +14,7 @@ public class PostgresProperties {
         Properties props = new Properties();
         Path myPath = Paths.get("src/main/resources/database.properties");
         try {
-            BufferedReader bf = Files.newBufferedReader(myPath,
-                    StandardCharsets.UTF_8);
-
+            BufferedReader bf = Files.newBufferedReader(myPath, StandardCharsets.UTF_8);
             props.load(bf);
         } catch (IOException ex) {
             ex.printStackTrace();
