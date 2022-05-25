@@ -1,12 +1,11 @@
 package com.test.db.service;
 
-import com.test.db.ReadFileExeption;
-import org.json.simple.parser.ParseException;
+import com.test.db.CustomException;
 
 import java.io.IOException;
 
 public interface CustomerService {
 
-    void start() throws ReadFileExeption, IOException, ParseException;
+    void start() throws CustomException, IOException;
 
 }

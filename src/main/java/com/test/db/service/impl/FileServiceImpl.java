@@ -1,13 +1,13 @@
 package com.test.db.service.impl;
 
-import com.test.db.ReadFileExeption;
+import com.test.db.CustomException;
 import com.test.db.service.FileService;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONObject;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Map;
+import java.util.Scanner;
 
 public class FileServiceImpl implements FileService {
 
@@ -20,14 +20,16 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public Object readFile() throws ReadFileExeption {
-        try (FileReader reader = new FileReader(inputFile)) {
-            return new JSONParser().parse(reader);
-        } catch (ParseException e) {
-            throw new ReadFileExeption("parsing error");
-        } catch (IOException e) {
-            throw new ReadFileExeption("reading error");
+    public JSONObject readFile() {
+        String inputJson;
+        try {
+            inputJson = new Scanner(new File(inputFile)).useDelimiter("\\Z").next();
+        } catch (FileNotFoundException e) {
+            throw new CustomException(String.format("Файл %s не найден", inputFile));
         }
+
+        if (inputJson == null) throw new CustomException("Не удалось распарсить json");
+        return new JSONObject(inputJson);
     }
 
     @Override

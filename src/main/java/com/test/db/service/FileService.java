@@ -1,14 +1,14 @@
 package com.test.db.service;
 
-import com.test.db.ReadFileExeption;
-import org.json.simple.parser.ParseException;
+import com.test.db.CustomException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Map;
 
 public interface FileService {
 
-    Object readFile() throws IOException, ParseException, ReadFileExeption;
+    JSONObject readFile() throws IOException, CustomException;
 
     void writeFile(Map<String, Object> result);
 
