@@ -10,6 +10,6 @@ public interface FileService {
 
     JSONObject readFile() throws IOException, CustomException;
 
-    void writeFile(Map<String, Object> result);
+    void writeFile(Map<Integer, Object> result);
 
 }

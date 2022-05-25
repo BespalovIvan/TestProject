@@ -30,17 +30,17 @@ public class CustomerServiceImpl implements CustomerService {
         if (criteria == null) throw new CustomException("Критерий criteria не был найден в json.");
         for (int i = 0; i < criteria.length(); i++) {
             if (!criteria.getJSONObject(i).optString("lastName").equals("")) {
-                Map<String, Object> customers = findCustomers(criteria.getJSONObject(i).optString("lastName"));
+                Map<Integer, Object> customers = findCustomers(criteria.getJSONObject(i).optString("lastName"));
                 fileService.writeFile(customers);
             }
         }
     }
 
-    public Map<String, Object> findCustomers(String lastName) {
+    public Map<Integer, Object> findCustomers(String lastName) {
         List<Customer> customersFromLastName = dbRepository.findCustomersFromLastName(lastName);
-        Map<String, Object> response = new HashMap<>();
+        Map<Integer, Object> response = new HashMap<>();
         for (Customer c : customersFromLastName) {
-            response.put(c.getLastname(), c.getUsername());
+            response.put(c.getId(), c.toString());
         }
         return response;
     }

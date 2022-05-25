@@ -38,10 +38,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "{id: " + id
-                + ", username: " + firstname
-                + ", lastname: " + lastname
-                + "}";
+        return "{" + "lastname: " + lastname + " ," + "firstname: " + firstname + "}";
     }
 
 }

@@ -1,11 +1,13 @@
 package com.test.db.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.db.CustomException;
 import com.test.db.service.FileService;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -33,8 +35,12 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void writeFile(Map<String, Object> result) {
-        //логика на запись в файл
+    public void writeFile(Map<Integer, Object> result) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writeValue(new File(outputFile),result.values());
+        } catch (IOException e) {
+            throw new CustomException("Не удалось записать файл");
+        }
     }
-
 }
