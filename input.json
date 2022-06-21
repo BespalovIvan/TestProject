@@ -4,8 +4,8 @@
       "lastName": "Ivanov"
     },
     {
-      "productName": "Milk",
-      "minTimes": 5
+      "productName": "Bread",
+      "minTimes": 2
     },
     {
       "minExpenses": 10,

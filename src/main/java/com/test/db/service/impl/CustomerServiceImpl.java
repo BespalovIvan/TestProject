@@ -30,8 +30,12 @@ public class CustomerServiceImpl implements CustomerService {
         if (criteria == null) throw new CustomException("Критерий criteria не был найден в json.");
         for (int i = 0; i < criteria.length(); i++) {
             if (!criteria.getJSONObject(i).optString("lastName").equals("")) {
-                Map<Integer, Object> customers = findCustomers(criteria.getJSONObject(i).optString("lastName"));
-                fileService.writeFile(customers);
+                Map<Integer, Object> customersFromLastname = findCustomers(criteria.getJSONObject(i).optString("lastName"));
+                fileService.writeFile(customersFromLastname);
+            }
+            if (!criteria.getJSONObject(i).optString("productName").equals("")) {
+                Map<Integer, Object> customersFromProductName = findCustomersFromProduct(criteria.getJSONObject(i).optString("productName"),Integer.valueOf(criteria.getJSONObject(i).optString("minTimes")));
+                fileService.writeFile(customersFromProductName);
             }
         }
     }
@@ -40,6 +44,15 @@ public class CustomerServiceImpl implements CustomerService {
         List<Customer> customersFromLastName = dbRepository.findCustomersFromLastName(lastName);
         Map<Integer, Object> response = new HashMap<>();
         for (Customer c : customersFromLastName) {
+            response.put(c.getId(), c.toString());
+        }
+        return response;
+    }
+
+    public Map<Integer,Object> findCustomersFromProduct(String productName, Integer minCount) {
+        List<Customer> customersFromProductName= dbRepository.findCustomersFromProductNameAndMinCount(productName, minCount);
+        Map<Integer, Object> response = new HashMap<>();
+        for (Customer c : customersFromProductName) {
             response.put(c.getId(), c.toString());
         }
         return response;
