@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface FileService {
 
-    JSONObject readFile() throws IOException, CustomException;
+    JSONObject readFile() throws CustomException;
 
     void writeFile(Map<Integer, Object> result);
 

@@ -36,11 +36,13 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void writeFile(Map<Integer, Object> result) {
+        //TODO что-то подсказывает что тип ключа нужно будет менять, подумай над этим как его можно использовать при записи в файл
         ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writeValue(new File(outputFile),result.values());
+            mapper.writeValue(new File(outputFile), result.values());
         } catch (IOException e) {
             throw new CustomException("Не удалось записать файл");
         }
     }
+
 }

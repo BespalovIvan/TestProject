@@ -1,6 +1,6 @@
 package com.test.db.service.impl;
 
-import com.test.db.service.StaticsitService;
+import com.test.db.service.StatisticService;
 
-public class StatisticServiceImpl implements StaticsitService {
+public class StatisticServiceImpl implements StatisticService {
 }
