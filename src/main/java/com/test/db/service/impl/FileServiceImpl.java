@@ -2,14 +2,15 @@ package com.test.db.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.db.CustomException;
+import com.test.db.domain.Customer;
 import com.test.db.service.FileService;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class FileServiceImpl implements FileService {
 
@@ -35,11 +36,13 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void writeFile(Map<Integer, Object> result) {
-        //TODO что-то подсказывает что тип ключа нужно будет менять, подумай над этим как его можно использовать при записи в файл
+    public void writeFile(Map<String, List<Customer>> result) {
+       List<String> keys = new ArrayList<>(result.keySet());
         ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writeValue(new File(outputFile), result.values());
+            mapper.writeValue(new File(outputFile), "criteria : " + keys.get(0) + " "  + result.get("lastName")
+            + " criteria : " + keys.get(1) + " "  + result.get("productName"));
+
         } catch (IOException e) {
             throw new CustomException("Не удалось записать файл");
         }

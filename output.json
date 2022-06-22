@@ -1,1 +1,1 @@
-["{lastname: Ivanov ,firstname: Ivan}","{lastname: Sidorov ,firstname: Petr}","{lastname: Petrov ,firstname: Alexandr}","{lastname: Leskov ,firstname: Kirill}"]
+"criteria : lastName [{lastname: Ivanov ,firstname: Ivan}, {lastname: Ivanov ,firstname: Egor}, {lastname: Ivanov ,firstname: Alexandr}] criteria : productName [{lastname: Petrov ,firstname: Alexandr}, {lastname: Ivanov ,firstname: Ivan}, {lastname: Leskov ,firstname: Kirill}, {lastname: Sidorov ,firstname: Petr}]"

@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class CustomerServiceImpl implements CustomerService {
 
@@ -28,30 +27,31 @@ public class CustomerServiceImpl implements CustomerService {
         JSONObject fileObject = fileService.readFile();
         JSONArray criteria = fileObject.optJSONArray("criteria");
         if (criteria == null) throw new CustomException("Критерий criteria не был найден в json.");
-        Map<Integer, Object> result = new HashMap<>();
+        Map<String, List<Customer>> result = new HashMap<>();
         for (int i = 0; i < criteria.length(); i++) {
             if (!criteria.getJSONObject(i).optString("lastName").equals("")) {
-                result.putAll(findCustomers(criteria.getJSONObject(i).optString("lastName")));
+                result.putAll(findCustomers("lastName",criteria.getJSONObject(i).optString("lastName")));
             } else if (!criteria.getJSONObject(i).optString("productName").equals("")) {
-                result.putAll(findCustomersFromProduct(criteria.getJSONObject(i).optString("productName"), Integer.valueOf(criteria.getJSONObject(i).optString("minTimes"))));
+                result.putAll(findCustomersFromProduct("productName", criteria.getJSONObject(i).optString("productName"),
+                        Integer.valueOf(criteria.getJSONObject(i).optString("minTimes"))));
             }
-        }
 
+        }
         fileService.writeFile(result);
     }
 
-    private Map<Integer, Object> findCustomers(String lastName) {
-        return dbRepository.findCustomersFromLastName(lastName).stream()
-                .collect(Collectors.toMap(Customer::getId, Customer::toString));
+    private Map<String, List<Customer>> findCustomers(String criteria,String lastName) {
+        List<Customer> customersFromLastname = dbRepository.findCustomersFromLastName(lastName);
+        Map<String,List<Customer>> response = new HashMap<>();
+        response.put(criteria,customersFromLastname);
+        return response;
+
     }
 
-    private Map<Integer, Object> findCustomersFromProduct(String productName, Integer minCount) {
-        List<Customer> customersFromProductName = dbRepository.findCustomersFromProductNameAndMinCount(productName, minCount);
-        Map<Integer, Object> response = new HashMap<>();
-        for (Customer c : customersFromProductName) {
-            response.put(c.getId(), c.toString());
-        }
+    private Map<String,List<Customer>> findCustomersFromProduct(String criteria,String productName, Integer minCount) {
+        Map<String,List<Customer>> response = new HashMap<>();
+        List<Customer> customersFromProductName = dbRepository.findCustomersFromProductNameAndMinCount(productName,minCount);
+        response.put(criteria, customersFromProductName);
         return response;
     }
-
 }
