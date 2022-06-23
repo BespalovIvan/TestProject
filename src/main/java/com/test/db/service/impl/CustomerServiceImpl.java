@@ -30,28 +30,27 @@ public class CustomerServiceImpl implements CustomerService {
         Map<String, List<Customer>> result = new HashMap<>();
         for (int i = 0; i < criteria.length(); i++) {
             if (!criteria.getJSONObject(i).optString("lastName").equals("")) {
-                result.putAll(findCustomers("lastName",criteria.getJSONObject(i).optString("lastName")));
+                result.put("lastName",findCustomers(criteria.getJSONObject(i).optString("lastName")));
             } else if (!criteria.getJSONObject(i).optString("productName").equals("")) {
-                result.putAll(findCustomersFromProduct("productName", criteria.getJSONObject(i).optString("productName"),
+                result.put("productName",findCustomersFromProduct( criteria.getJSONObject(i).optString("productName"),
                         Integer.valueOf(criteria.getJSONObject(i).optString("minTimes"))));
             }
-
+            else if (!criteria.getJSONObject(i).optString("minExpenses").equals("")) {
+                result.put("Expenses",findCustomersFromExpenses(Integer.parseInt(criteria.getJSONObject(i).optString("minExpenses")),
+                        Integer.parseInt(criteria.getJSONObject(i).optString("maxExpenses"))));
+            }
         }
         fileService.writeFile(result);
     }
 
-    private Map<String, List<Customer>> findCustomers(String criteria,String lastName) {
-        List<Customer> customersFromLastname = dbRepository.findCustomersFromLastName(lastName);
-        Map<String,List<Customer>> response = new HashMap<>();
-        response.put(criteria,customersFromLastname);
-        return response;
+    private List<Customer> findCustomers(String lastName) {
+        return dbRepository.findCustomersFromLastName(lastName);
 
     }
-
-    private Map<String,List<Customer>> findCustomersFromProduct(String criteria,String productName, Integer minCount) {
-        Map<String,List<Customer>> response = new HashMap<>();
-        List<Customer> customersFromProductName = dbRepository.findCustomersFromProductNameAndMinCount(productName,minCount);
-        response.put(criteria, customersFromProductName);
-        return response;
+    private List<Customer> findCustomersFromProduct(String productName, Integer minCount) {
+        return dbRepository.findCustomersFromProductNameAndMinCount(productName,minCount);
+    }
+    private List<Customer> findCustomersFromExpenses(int minExpenses, int maxExpenses){
+        return dbRepository.findCustomerFromMinAndMaxExpenses(minExpenses,maxExpenses);
     }
 }

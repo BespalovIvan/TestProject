@@ -29,6 +29,17 @@ public class DBRepository {
         return executeQueryWithFindCustomers(query);
     }
 
+    public List<Customer> findCustomerFromMinAndMaxExpenses(int minExpenses, int maxExpenses) {
+        String query = String.format("SELECT  cus.id,first_name,last_name,SUM(price)\n" +
+                "FROM customers cus \n" +
+                "JOIN purchases pur ON (cus.id = pur.customer_id) \n" +
+                "JOIN items it ON (it.id = pur.item_id) \n" +
+                "GROUP BY first_name, last_name, cus.id \n" +
+                "HAVING SUM(price) BETWEEN %d and %d \n" +
+                "ORDER BY first_name;", minExpenses, maxExpenses);
+        return executeQueryWithFindCustomers(query);
+    }
+
     private List<Customer> executeQueryWithFindCustomers(String query) {
         List<Customer> customers = new ArrayList<>();
         try (Statement statement = PostgresConnection.getConnection().createStatement();

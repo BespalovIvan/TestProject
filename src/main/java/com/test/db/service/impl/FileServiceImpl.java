@@ -9,8 +9,10 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 public class FileServiceImpl implements FileService {
 
@@ -40,8 +42,7 @@ public class FileServiceImpl implements FileService {
        List<String> keys = new ArrayList<>(result.keySet());
         ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writeValue(new File(outputFile), "criteria : " + keys.get(0) + " "  + result.get("lastName")
-            + " criteria : " + keys.get(1) + " "  + result.get("productName"));
+            mapper.writeValue(new File(outputFile), result);
 
         } catch (IOException e) {
             throw new CustomException("Не удалось записать файл");
