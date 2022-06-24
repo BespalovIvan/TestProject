@@ -16,41 +16,61 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final FileService fileService;
     private final DBRepository dbRepository;
+    private final Map<String, List<Customer>> result = new HashMap<>();
 
     public CustomerServiceImpl(FileService fileService, DBRepository dbRepository) {
         this.fileService = fileService;
         this.dbRepository = dbRepository;
     }
 
+    /*
+    TODO
+     1) Тут отлично может подойти паттерн фабричный метод, в будущем попробуй переписать.
+     2) Если ключи начинают повторяться, целесообразно их хранить в константах, ENUM к примеру
+    */
     @Override
     public void start() throws CustomException {
         JSONObject fileObject = fileService.readFile();
         JSONArray criteria = fileObject.optJSONArray("criteria");
         if (criteria == null) throw new CustomException("Критерий criteria не был найден в json.");
-        Map<String, List<Customer>> result = new HashMap<>();
+
         for (int i = 0; i < criteria.length(); i++) {
             if (!criteria.getJSONObject(i).optString("lastName").equals("")) {
-                result.put("lastName",findCustomers(criteria.getJSONObject(i).optString("lastName")));
+                findCustomers(criteria.getJSONObject(i).optString("lastName"));
             } else if (!criteria.getJSONObject(i).optString("productName").equals("")) {
-                result.put("productName",findCustomersFromProduct( criteria.getJSONObject(i).optString("productName"),
-                        Integer.valueOf(criteria.getJSONObject(i).optString("minTimes"))));
-            }
-            else if (!criteria.getJSONObject(i).optString("minExpenses").equals("")) {
-                result.put("Expenses",findCustomersFromExpenses(Integer.parseInt(criteria.getJSONObject(i).optString("minExpenses")),
-                        Integer.parseInt(criteria.getJSONObject(i).optString("maxExpenses"))));
+                findCustomersFromProduct(criteria.getJSONObject(i).optString("productName"),
+                        Integer.valueOf(criteria.getJSONObject(i).optString("minTimes")));
+            } else if (!criteria.getJSONObject(i).optString("minExpenses").equals("")) {
+                findCustomersFromExpenses(Integer.parseInt(criteria.getJSONObject(i).optString("minExpenses")),
+                        Integer.parseInt(criteria.getJSONObject(i).optString("maxExpenses")));
             }
         }
+
         fileService.writeFile(result);
     }
 
-    private List<Customer> findCustomers(String lastName) {
-        return dbRepository.findCustomersFromLastName(lastName);
+    private void findCustomers(String lastName) {
+        List<Customer> customers = dbRepository.findCustomersFromLastName(lastName);
+        if (!customers.isEmpty()) checkExistAndAdd("lastName", customers);
 
     }
-    private List<Customer> findCustomersFromProduct(String productName, Integer minCount) {
-        return dbRepository.findCustomersFromProductNameAndMinCount(productName,minCount);
+
+    private void findCustomersFromProduct(String productName, Integer minCount) {
+        List<Customer> customers = dbRepository.findCustomersFromProductNameAndMinCount(productName, minCount);
+        if (!customers.isEmpty()) checkExistAndAdd("productName", customers);
     }
-    private List<Customer> findCustomersFromExpenses(int minExpenses, int maxExpenses){
-        return dbRepository.findCustomerFromMinAndMaxExpenses(minExpenses,maxExpenses);
+
+    private void findCustomersFromExpenses(int minExpenses, int maxExpenses) {
+        List<Customer> customers = dbRepository.findCustomerFromMinAndMaxExpenses(minExpenses, maxExpenses);
+        if (!customers.isEmpty()) checkExistAndAdd("expenses", customers);
     }
+
+    private void checkExistAndAdd(String key, List<Customer> customers) {
+        if (result.containsKey(key)) {
+            result.get(key).addAll(customers);
+        } else {
+            result.put(key, customers);
+        }
+    }
+
 }

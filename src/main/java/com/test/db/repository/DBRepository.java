@@ -30,7 +30,7 @@ public class DBRepository {
     }
 
     public List<Customer> findCustomerFromMinAndMaxExpenses(int minExpenses, int maxExpenses) {
-        String query = String.format("SELECT  cus.id,first_name,last_name,SUM(price)\n" +
+        String query = String.format("SELECT cus.id,first_name,last_name,SUM(price)\n" +
                 "FROM customers cus \n" +
                 "JOIN purchases pur ON (cus.id = pur.customer_id) \n" +
                 "JOIN items it ON (it.id = pur.item_id) \n" +

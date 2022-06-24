@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -39,10 +38,8 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void writeFile(Map<String, List<Customer>> result) {
-       List<String> keys = new ArrayList<>(result.keySet());
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writeValue(new File(outputFile), result);
+            new ObjectMapper().writeValue(new File(outputFile), result);
 
         } catch (IOException e) {
             throw new CustomException("Не удалось записать файл");
