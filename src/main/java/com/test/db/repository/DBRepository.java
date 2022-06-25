@@ -18,28 +18,33 @@ public class DBRepository {
     }
 
     public List<Customer> findCustomersFromProductNameAndMinCount(String productName, int minCount) {
-        String query = String.format("SELECT cus.id, first_name,last_name,product_name,count(*) \n" +
+        String query = String.format("SELECT cus.id, first_name,last_name,product_name \n" +
                         "FROM customers cus \n" +
                         "JOIN purchases pur ON (cus.id = pur.customer_id) \n" +
                         "JOIN items it ON (it.id = pur.item_id) WHERE UPPER(product_name) = '%s' \n" +
                         "GROUP BY first_name,last_name,product_name,cus.id \n" +
-                        "HAVING count(*)>=%d \n" +
-                        "ORDER BY first_name;",
-                productName.toUpperCase(), minCount);
+                        "HAVING count(*)>=%d;\n" , productName.toUpperCase(), minCount);
         return executeQueryWithFindCustomers(query);
     }
 
     public List<Customer> findCustomerFromMinAndMaxExpenses(int minExpenses, int maxExpenses) {
-        String query = String.format("SELECT cus.id,first_name,last_name,SUM(price)\n" +
+        String query = String.format("SELECT cus.id,first_name,last_name\n" +
                 "FROM customers cus \n" +
                 "JOIN purchases pur ON (cus.id = pur.customer_id) \n" +
                 "JOIN items it ON (it.id = pur.item_id) \n" +
                 "GROUP BY first_name, last_name, cus.id \n" +
-                "HAVING SUM(price) BETWEEN %d and %d \n" +
-                "ORDER BY first_name;", minExpenses, maxExpenses);
+                "HAVING SUM(price) BETWEEN %d and %d; \n" , minExpenses, maxExpenses);
         return executeQueryWithFindCustomers(query);
     }
-
+    public List<Customer> findBadCustomers(int countBadCustomers) {
+        String query = String.format("SELECT cus.id, first_name,last_name \n" +
+                "FROM customers cus \n" +
+                "JOIN purchases pur ON (cus.id = pur.customer_id) \n" +
+                "GROUP BY first_name, last_name,cus.id \n" +
+                "ORDER BY count(*) \n" +
+                "LIMIT %d;", countBadCustomers);
+        return executeQueryWithFindCustomers(query);
+    }
     private List<Customer> executeQueryWithFindCustomers(String query) {
         List<Customer> customers = new ArrayList<>();
         try (Statement statement = PostgresConnection.getConnection().createStatement();

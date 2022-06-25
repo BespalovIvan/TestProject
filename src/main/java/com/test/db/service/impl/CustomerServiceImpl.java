@@ -7,7 +7,6 @@ import com.test.db.service.CustomerService;
 import com.test.db.service.FileService;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,33 +35,38 @@ public class CustomerServiceImpl implements CustomerService {
 
         for (int i = 0; i < criteria.length(); i++) {
             if (!criteria.getJSONObject(i).optString("lastName").equals("")) {
-                findCustomers(criteria.getJSONObject(i).optString("lastName"));
+                checkExistAndAdd(criteria.getJSONObject(i).toString(),
+                        findCustomers(criteria.getJSONObject(i).optString("lastName")));
             } else if (!criteria.getJSONObject(i).optString("productName").equals("")) {
-                findCustomersFromProduct(criteria.getJSONObject(i).optString("productName"),
-                        Integer.valueOf(criteria.getJSONObject(i).optString("minTimes")));
+                checkExistAndAdd(criteria.getJSONObject(i).toString(),
+                        findCustomersFromProduct(criteria.getJSONObject(i).optString("productName"),
+                        Integer.valueOf(criteria.getJSONObject(i).optString("minTimes"))));
             } else if (!criteria.getJSONObject(i).optString("minExpenses").equals("")) {
-                findCustomersFromExpenses(Integer.parseInt(criteria.getJSONObject(i).optString("minExpenses")),
-                        Integer.parseInt(criteria.getJSONObject(i).optString("maxExpenses")));
+                checkExistAndAdd(criteria.getJSONObject(i).toString(),
+                        findCustomersFromExpenses(Integer.parseInt(criteria.getJSONObject(i).optString("minExpenses")),
+                        Integer.parseInt(criteria.getJSONObject(i).optString("maxExpenses"))));
+            } else if (!criteria.getJSONObject(i).optString("badCustomers").equals("")) {
+                checkExistAndAdd(criteria.getJSONObject(i).toString(),
+                        findFromBadCustomers(Integer.parseInt(criteria.getJSONObject(i).optString("badCustomers"))));
             }
         }
-
         fileService.writeFile(result);
     }
 
-    private void findCustomers(String lastName) {
-        List<Customer> customers = dbRepository.findCustomersFromLastName(lastName);
-        if (!customers.isEmpty()) checkExistAndAdd("lastName", customers);
-
+    private List<Customer> findCustomers(String lastName) {
+        return dbRepository.findCustomersFromLastName(lastName);
     }
 
-    private void findCustomersFromProduct(String productName, Integer minCount) {
-        List<Customer> customers = dbRepository.findCustomersFromProductNameAndMinCount(productName, minCount);
-        if (!customers.isEmpty()) checkExistAndAdd("productName", customers);
+    private List<Customer> findCustomersFromProduct(String productName, Integer minCount) {
+        return dbRepository.findCustomersFromProductNameAndMinCount(productName, minCount);
     }
 
-    private void findCustomersFromExpenses(int minExpenses, int maxExpenses) {
-        List<Customer> customers = dbRepository.findCustomerFromMinAndMaxExpenses(minExpenses, maxExpenses);
-        if (!customers.isEmpty()) checkExistAndAdd("expenses", customers);
+    private List<Customer> findCustomersFromExpenses(int minExpenses, int maxExpenses) {
+        return dbRepository.findCustomerFromMinAndMaxExpenses(minExpenses, maxExpenses);
+    }
+
+    private List<Customer> findFromBadCustomers(int countBadCustomers) {
+        return dbRepository.findBadCustomers(countBadCustomers);
     }
 
     private void checkExistAndAdd(String key, List<Customer> customers) {
@@ -72,5 +76,4 @@ public class CustomerServiceImpl implements CustomerService {
             result.put(key, customers);
         }
     }
-
 }
