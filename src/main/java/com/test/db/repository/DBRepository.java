@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 public class DBRepository {
@@ -65,4 +66,9 @@ public class DBRepository {
         return customers;
     }
 
+    public Map<String,List<Object>> getStatFromCustomers(String startDate, String endDate) {
+        String query = String.format("SELECT DISTINCT TO_DATE('%s','YYYY-MM-DD')-TO_DATE('%s','YYYY-MM-DD') count_of_days from purchases;",startDate,endDate);
+
+        return null;
+    }
 }

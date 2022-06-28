@@ -1,21 +1,5 @@
 {
-  "criteria": [
-    {
-      "lastName": "Ivanov"
-    },
-    {
-      "lastName": "Petrov"
-    },
-    {
-      "productName": "Bread",
-      "minTimes": 2
-    },
-    {
-      "minExpenses": 300,
-      "maxExpenses": 500
-    },
-    {
-      "badCustomers": 3
-    }
-  ]
+  "startDate": "2020-01-14",
+  "endDate": "2020-01-26"
 }
+

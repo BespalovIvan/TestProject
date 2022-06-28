@@ -11,23 +11,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomerServiceImpl implements CustomerService {
+public class CustomerSearch  implements CustomerService {
 
     private final FileService fileService;
     private final DBRepository dbRepository;
     private final Map<String, List<Customer>> result = new HashMap<>();
 
-    public CustomerServiceImpl(FileService fileService, DBRepository dbRepository) {
+    public CustomerSearch(FileService fileService, DBRepository dbRepository) {
         this.fileService = fileService;
         this.dbRepository = dbRepository;
     }
 
-    /*
-    TODO
-     1) Тут отлично может подойти паттерн фабричный метод, в будущем попробуй переписать.
-     2) Если ключи начинают повторяться, целесообразно их хранить в константах, ENUM к примеру
-    */
-    @Override
+
     public void start() throws CustomException {
         JSONObject fileObject = fileService.readFile();
         JSONArray criteria = fileObject.optJSONArray("criteria");
@@ -40,11 +35,11 @@ public class CustomerServiceImpl implements CustomerService {
             } else if (!criteria.getJSONObject(i).optString("productName").equals("")) {
                 checkExistAndAdd(criteria.getJSONObject(i).toString(),
                         findCustomersFromProduct(criteria.getJSONObject(i).optString("productName"),
-                        Integer.valueOf(criteria.getJSONObject(i).optString("minTimes"))));
+                                Integer.valueOf(criteria.getJSONObject(i).optString("minTimes"))));
             } else if (!criteria.getJSONObject(i).optString("minExpenses").equals("")) {
                 checkExistAndAdd(criteria.getJSONObject(i).toString(),
                         findCustomersFromExpenses(Integer.parseInt(criteria.getJSONObject(i).optString("minExpenses")),
-                        Integer.parseInt(criteria.getJSONObject(i).optString("maxExpenses"))));
+                                Integer.parseInt(criteria.getJSONObject(i).optString("maxExpenses"))));
             } else if (!criteria.getJSONObject(i).optString("badCustomers").equals("")) {
                 checkExistAndAdd(criteria.getJSONObject(i).toString(),
                         findFromBadCustomers(Integer.parseInt(criteria.getJSONObject(i).optString("badCustomers"))));
