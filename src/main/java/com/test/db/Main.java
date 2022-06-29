@@ -5,7 +5,7 @@ import com.test.db.service.impl.CustomerSearch;
 import com.test.db.service.impl.CustomerStat;
 import com.test.db.service.impl.FileServiceImpl;
 
-public class ServiceFactory {
+public class Main {
     public static void main(String[] args) {
         switch (args[0]) {
             case "search":

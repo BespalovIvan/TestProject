@@ -6,10 +6,7 @@ import com.test.db.domain.Customer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class DBRepository {
 
@@ -66,9 +63,22 @@ public class DBRepository {
         return customers;
     }
 
-    public Map<String,List<Object>> getStatFromCustomers(String startDate, String endDate) {
-        String query = String.format("SELECT DISTINCT TO_DATE('%s','YYYY-MM-DD')-TO_DATE('%s','YYYY-MM-DD') count_of_days from purchases;",startDate,endDate);
-
-        return null;
+    public Map<String,List<Object>> getTotalDays(String startDate, String endDate) {
+        String query = String.format("SELECT sum((extract(dow from d) between 1 and 5)::int ) month_working_days_till_date \n" +
+                "FROM generate_series(date_trunc('day', TO_DATE('%s','YYYY-MM-DD')) , TO_DATE('%s','YYYY-MM-DD'), interval '1 day') x(d);",startDate,endDate);
+        Map<String,List<Object>> result = new HashMap<>();
+        List<Object> values = new ArrayList<>();
+        try (Statement statement = PostgresConnection.getConnection().createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                values.add(resultSet.getInt(1));
+                result.put("TotalDays", values);
+            }
+        }catch (SQLException e){
+            System.out.println("connection not established ");
+            e.printStackTrace();
+        }
+        return result;
     }
+
 }
