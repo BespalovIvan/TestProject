@@ -1,6 +1,6 @@
 package com.test.db.service;
 
-import com.test.db.CustomException;
+import com.test.db.exception.CustomException;
 import com.test.db.repository.DBRepository;
 import com.test.db.service.findCustomers.*;
 import org.json.JSONArray;

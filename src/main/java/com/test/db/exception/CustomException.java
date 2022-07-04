@@ -1,4 +1,4 @@
-package com.test.db;
+package com.test.db.exception;
 
 public class CustomException extends RuntimeException {
 

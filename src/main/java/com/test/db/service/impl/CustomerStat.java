@@ -1,6 +1,6 @@
 package com.test.db.service.impl;
 
-import com.test.db.CustomException;
+import com.test.db.exception.CustomException;
 import com.test.db.repository.DBRepository;
 import com.test.db.service.CustomerService;
 import com.test.db.service.FileService;
@@ -10,28 +10,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomerStat implements CustomerService {
+/*
+TODO класс выбивается из концепции общего приложения. Как будто что-то с ним не то.
+Он не будет сохранять, пока мы не приведем к общему знаменателю тип обьекта. Тут ты в List добавляешь Object
+обьекты. А в классе CustomerSearch хранятся Customer в листе. Так неправильно, нужно иметь один контракт и несколько реализаций.
+Сейчас если мы меняем реализацию на эту, она не будет работать, так как логика по сохранению в родительском классе работает
+с результирующей коллекцией.
 
-    private final FileService fileService;
+*/
+public class CustomerStat extends CustomerService {
+
     private final DBRepository dbRepository;
     private final Map<String, List<Object>> result = new HashMap<>();
 
     public CustomerStat(FileService fileService, DBRepository dbRepository) {
-        this.fileService = fileService;
+        super(fileService);
         this.dbRepository = dbRepository;
     }
 
     @Override
-    public void start() throws CustomException {
-        JSONObject fileObject = fileService.readFile();
+    public void readJSONAndFind(JSONObject fileObject) throws CustomException {
         result.putAll(findStatFromCustomers(fileObject.optString("startDate"),
                 fileObject.optString("endDate")));
     }
 
     private Map<String, List<Object>> findStatFromCustomers(String startDate, String endDate) {
-        Map<String, List<Object>> result = new HashMap<>();
-        result.putAll(dbRepository.getTotalDays(startDate, endDate));
-
-        return result;
+        return new HashMap<>(dbRepository.getTotalDays(startDate, endDate));
     }
 }

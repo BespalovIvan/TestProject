@@ -1,7 +1,7 @@
 package com.test.db.service;
 
-import com.test.db.CustomException;
 import com.test.db.domain.Customer;
+import com.test.db.exception.CustomException;
 import org.json.JSONObject;
 
 import java.util.List;

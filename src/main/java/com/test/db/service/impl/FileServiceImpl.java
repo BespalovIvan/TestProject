@@ -1,7 +1,7 @@
 package com.test.db.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.test.db.CustomException;
+import com.test.db.exception.CustomException;
 import com.test.db.domain.Customer;
 import com.test.db.service.FileService;
 import org.json.JSONObject;

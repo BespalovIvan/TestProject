@@ -6,6 +6,9 @@ import com.test.db.service.FileService;
 import com.test.db.service.impl.CustomerSearch;
 import com.test.db.service.impl.CustomerStat;
 
+/*Factory Method
+Пример одной из реализации фабричного метода, который мы вынесли из абстрактного класса CustomerService
+*/
 public class SearchFactory {
 
     public static CustomerService createCustomerService(String type, FileService fileService) {
