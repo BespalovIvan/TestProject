@@ -1,19 +1,16 @@
 package com.test.db.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.db.CustomException;
 import com.test.db.repository.DBRepository;
 import com.test.db.service.CustomerService;
 import com.test.db.service.FileService;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomerStat  implements CustomerService {
+public class CustomerStat implements CustomerService {
 
     private final FileService fileService;
     private final DBRepository dbRepository;
@@ -32,8 +29,8 @@ public class CustomerStat  implements CustomerService {
     }
 
     private Map<String, List<Object>> findStatFromCustomers(String startDate, String endDate) {
-        Map<String,List<Object>> result = new HashMap<>();
-        result.putAll(dbRepository.getTotalDays(startDate,endDate));
+        Map<String, List<Object>> result = new HashMap<>();
+        result.putAll(dbRepository.getTotalDays(startDate, endDate));
 
         return result;
     }

@@ -40,7 +40,6 @@ public class FileServiceImpl implements FileService {
     public void writeFile(Map<String, List<Customer>> result) {
         try {
             new ObjectMapper().writeValue(new File(outputFile), result);
-
         } catch (IOException e) {
             throw new CustomException("Не удалось записать файл");
         }
