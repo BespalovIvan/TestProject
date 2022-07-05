@@ -2,6 +2,7 @@ package com.test.db.repository;
 
 import com.test.db.config.PostgresConnection;
 import com.test.db.domain.Customer;
+import com.test.db.domain.Item;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -65,22 +66,29 @@ public class DBRepository {
         return customers;
     }
 
-    public Map<String, List<Object>> getTotalDays(String startDate, String endDate) {
-        String query = String.format("SELECT sum((extract(dow from d) between 1 and 5)::int ) month_working_days_till_date \n" +
-                "FROM generate_series(date_trunc('day', TO_DATE('%s','YYYY-MM-DD')) , TO_DATE('%s','YYYY-MM-DD'), interval '1 day') x(d);", startDate, endDate);
-        Map<String, List<Object>> result = new HashMap<>();
-        List<Object> values = new ArrayList<>();
+        public List<Customer> getStat (String startDate, String endDate) {
+        String queryGetCustomers = String.format("select c.id, first_name, last_name,i.id, product_name,SUM(price)\n" +
+                "from customers c \n" +
+                "JOIN purchases p ON (c.id = p.customer_id) \n" +
+                "JOIN items i ON (p.item_id = i.id) \n" +
+                "WHERE p.date BETWEEN TO_DATE('%s','YYYY-MM-DD') and TO_DATE('%s','YYYY-MM-DD')\n" +
+                "GROUP BY c.id, c.first_name, last_name, product_name,i.id\n" +
+                "ORDER BY first_name,last_name,SUM(price) DESC;\n",startDate,endDate);
+            List<Item> purchases = new ArrayList<>();
+            List<Customer> customers = new ArrayList<>();
         try (Statement statement = PostgresConnection.getConnection().createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+             ResultSet resultSet = statement.executeQuery(queryGetCustomers)) {
             while (resultSet.next()) {
-                values.add(resultSet.getInt(1));
-                result.put("TotalDays", values);
+                customers.add(new Customer(resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3),purchases));
+                purchases.add(new Item(resultSet.getInt(4),
+                        resultSet.getString(5),
+                        resultSet.getInt(6)));
             }
         } catch (SQLException e) {
-            System.out.println("connection not established ");
             e.printStackTrace();
         }
-        return result;
+        return customers;
     }
-
 }

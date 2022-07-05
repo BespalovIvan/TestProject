@@ -1,11 +1,13 @@
 package com.test.db.service.impl;
 
+import com.test.db.domain.Customer;
 import com.test.db.exception.CustomException;
 import com.test.db.repository.DBRepository;
 import com.test.db.service.CustomerService;
 import com.test.db.service.FileService;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,20 +23,16 @@ TODO класс выбивается из концепции общего при
 public class CustomerStat extends CustomerService {
 
     private final DBRepository dbRepository;
-    private final Map<String, List<Object>> result = new HashMap<>();
+
 
     public CustomerStat(FileService fileService, DBRepository dbRepository) {
         super(fileService);
         this.dbRepository = dbRepository;
     }
 
+
     @Override
     public void readJSONAndFind(JSONObject fileObject) throws CustomException {
-        result.putAll(findStatFromCustomers(fileObject.optString("startDate"),
-                fileObject.optString("endDate")));
-    }
-
-    private Map<String, List<Object>> findStatFromCustomers(String startDate, String endDate) {
-        return new HashMap<>(dbRepository.getTotalDays(startDate, endDate));
+        checkExistAndAdd("stat", (dbRepository.getStat(fileObject.optString("startDate"), fileObject.optString("endDate"))));
     }
 }
