@@ -2,15 +2,12 @@ package com.test.db.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.db.exception.CustomException;
-import com.test.db.domain.Customer;
 import com.test.db.service.FileService;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class FileServiceImpl implements FileService {
@@ -37,7 +34,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void writeFile(Map<String, List<Customer>> result) {
+    public void writeFile(String result) {
         try {
             new ObjectMapper().writeValue(new File(outputFile), result);
         } catch (IOException e) {

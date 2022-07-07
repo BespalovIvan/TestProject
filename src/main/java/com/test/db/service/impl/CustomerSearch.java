@@ -1,6 +1,7 @@
 package com.test.db.service.impl;
 
 import com.test.db.domain.ResultDTO;
+import com.test.db.domain.SearchResultDTO;
 import com.test.db.exception.CustomException;
 import com.test.db.repository.DBRepository;
 import com.test.db.service.CriteriaFactory;
@@ -13,14 +14,14 @@ public class CustomerSearch extends CustomerService {
 
     private final DBRepository dbRepository;
 
-    @Override
-    public String getType() {
-        return "search";
-    }
-
     public CustomerSearch(FileService fileService, DBRepository dbRepository) {
         super(fileService);
         this.dbRepository = dbRepository;
+    }
+
+    @Override
+    public ResultDTO getResult() {
+        return new SearchResultDTO("search", result);
     }
 
     @Override

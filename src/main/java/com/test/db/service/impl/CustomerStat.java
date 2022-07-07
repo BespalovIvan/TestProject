@@ -1,5 +1,7 @@
 package com.test.db.service.impl;
 
+import com.test.db.domain.ResultDTO;
+import com.test.db.domain.StatResultDTO;
 import com.test.db.exception.CustomException;
 import com.test.db.repository.DBRepository;
 import com.test.db.service.CustomerService;
@@ -25,8 +27,8 @@ public class CustomerStat extends CustomerService {
     }
 
     @Override
-    public String getType() {
-        return "stat";
+    public ResultDTO getResult() {
+        return new StatResultDTO("stat");
     }
 
     @Override
