@@ -1,16 +1,10 @@
 package com.test.db.service.impl;
 
-import com.test.db.domain.Customer;
 import com.test.db.exception.CustomException;
 import com.test.db.repository.DBRepository;
 import com.test.db.service.CustomerService;
 import com.test.db.service.FileService;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /*
 TODO класс выбивается из концепции общего приложения. Как будто что-то с ним не то.
@@ -30,6 +24,10 @@ public class CustomerStat extends CustomerService {
         this.dbRepository = dbRepository;
     }
 
+    @Override
+    public String getType() {
+        return "stat";
+    }
 
     @Override
     public void readJSONAndFind(JSONObject fileObject) throws CustomException {

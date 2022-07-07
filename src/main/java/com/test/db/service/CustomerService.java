@@ -20,6 +20,8 @@ public abstract class CustomerService {
 
     public abstract void readJSONAndFind(JSONObject fileObject) throws CustomException;
 
+    public abstract String getType();
+
     public void start() throws CustomException {
         readJSONAndFind(fileService.readFile());
         fileService.writeFile(result);

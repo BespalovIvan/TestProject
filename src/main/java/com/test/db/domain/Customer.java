@@ -14,7 +14,7 @@ public class Customer {
     private Integer id;
     private String firstname;
     private String lastname;
-    private List<Item> purchases;
+    private Map<String,Integer> purchases;
 
     public Customer (Integer id,String firstname, String lastname){
         this.id = id;

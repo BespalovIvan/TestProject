@@ -1,5 +1,6 @@
 package com.test.db.service.impl;
 
+import com.test.db.domain.ResultDTO;
 import com.test.db.exception.CustomException;
 import com.test.db.repository.DBRepository;
 import com.test.db.service.CriteriaFactory;
@@ -11,6 +12,11 @@ import org.json.JSONObject;
 public class CustomerSearch extends CustomerService {
 
     private final DBRepository dbRepository;
+
+    @Override
+    public String getType() {
+        return "search";
+    }
 
     public CustomerSearch(FileService fileService, DBRepository dbRepository) {
         super(fileService);
@@ -28,5 +34,4 @@ public class CustomerSearch extends CustomerService {
                             .find());
         }
     }
-
 }

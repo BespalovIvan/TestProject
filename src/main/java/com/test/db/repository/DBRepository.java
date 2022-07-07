@@ -74,7 +74,7 @@ public class DBRepository {
                 "WHERE p.date BETWEEN TO_DATE('%s','YYYY-MM-DD') and TO_DATE('%s','YYYY-MM-DD')\n" +
                 "GROUP BY c.id, c.first_name, last_name, product_name,i.id\n" +
                 "ORDER BY first_name,last_name,SUM(price) DESC;\n",startDate,endDate);
-            List<Item> purchases = new ArrayList<>();
+            Map<String,Integer> purchases = new HashMap<>();
             List<Customer> customers = new ArrayList<>();
         try (Statement statement = PostgresConnection.getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery(queryGetCustomers)) {
@@ -82,9 +82,7 @@ public class DBRepository {
                 customers.add(new Customer(resultSet.getInt(1),
                         resultSet.getString(2),
                         resultSet.getString(3),purchases));
-                purchases.add(new Item(resultSet.getInt(4),
-                        resultSet.getString(5),
-                        resultSet.getInt(6)));
+                purchases.put(resultSet.getString(5),resultSet.getInt(6));
             }
         } catch (SQLException e) {
             e.printStackTrace();
