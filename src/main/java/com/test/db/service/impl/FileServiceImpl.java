@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -35,11 +36,14 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void writeFile(String result) {
-        try {
-            new ObjectMapper().writeValue(new File(outputFile), result);
-        } catch (IOException e) {
-            throw new CustomException("Не удалось записать файл");
+
+
+            try {
+                new ObjectMapper().writeValue(new File(outputFile),result);
+            } catch (IOException e) {
+                throw new CustomException("Не удалось записать файл");
+            }
         }
+
     }
 
-}

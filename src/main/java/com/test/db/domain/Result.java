@@ -10,4 +10,8 @@ public class Result {
     private Criteria criteria;
     private List<Customer> list;
 
+    @Override
+    public String toString() {
+        return  criteria + "," + "results: " + list ;
+    }
 }

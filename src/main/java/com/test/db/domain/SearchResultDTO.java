@@ -4,7 +4,6 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class SearchResultDTO extends ResultDTO {
     //для search определяем какие-то такие параметры
@@ -18,4 +17,8 @@ public class SearchResultDTO extends ResultDTO {
         this.result = new ArrayList<>();
     }
 
+    @Override
+    public String toString() {
+        return "type:" + type + ", "  + "results: " + result;
+    }
 }

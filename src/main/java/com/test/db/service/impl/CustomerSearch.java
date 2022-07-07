@@ -34,6 +34,7 @@ public class CustomerSearch extends CustomerService {
         for (int i = 0; i < criteria.length(); i++) {
             CriteriaFactory.createCustomersFindService(i, criteria, dbRepository).find(resultDTO);
         }
+
     }
 
 }

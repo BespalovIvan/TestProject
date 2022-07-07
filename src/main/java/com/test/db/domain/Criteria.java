@@ -20,4 +20,9 @@ public class Criteria {
 
     }
 
+    @Override
+    public String toString() {
+        return
+                "criteria=" +  criteria ;
+    }
 }
