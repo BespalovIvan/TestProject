@@ -20,7 +20,6 @@ public class CustomerStat extends CustomerService {
 
     private final DBRepository dbRepository;
 
-
     public CustomerStat(FileService fileService, DBRepository dbRepository) {
         super(fileService);
         this.dbRepository = dbRepository;
@@ -33,6 +32,7 @@ public class CustomerStat extends CustomerService {
 
     @Override
     public void readJSONAndFind(JSONObject fileObject) throws CustomException {
-        checkExistAndAdd("stat", (dbRepository.getStat(fileObject.optString("startDate"), fileObject.optString("endDate"))));
+        dbRepository.getStat(fileObject.optString("startDate"), fileObject.optString("endDate"));
     }
+
 }

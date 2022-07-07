@@ -1,11 +1,9 @@
 package com.test.db.service.findCustomers;
 
-import com.test.db.domain.Customer;
-
-import java.util.List;
+import com.test.db.domain.SearchResultDTO;
 
 public interface CustomersFindService {
 
-    List<Customer> find();
+    void find(SearchResultDTO resultDTO);
 
 }

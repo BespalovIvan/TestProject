@@ -1,6 +1,9 @@
 package com.test.db.service.findCustomers;
 
+import com.test.db.domain.Criteria;
 import com.test.db.domain.Customer;
+import com.test.db.domain.Result;
+import com.test.db.domain.SearchResultDTO;
 import com.test.db.repository.DBRepository;
 import org.json.JSONObject;
 
@@ -17,9 +20,16 @@ public class CustomersFindFromExpensesImpl implements CustomersFindService {
     }
 
     @Override
-    public List<Customer> find() {
-        return dbRepository.findCustomerFromMinAndMaxExpenses(Integer.parseInt(criteria.optString("minExpenses")),
+    public void find(SearchResultDTO resultDTO) {
+        List<Customer> customers = dbRepository.findCustomerFromMinAndMaxExpenses(Integer.parseInt(criteria.optString("minExpenses")),
                 Integer.parseInt(criteria.optString("maxExpenses")));
+
+        Criteria criterias = new Criteria(
+                "minExpenses", criteria.optString("minExpenses"),
+                "maxExpenses", criteria.optString("maxExpenses")
+        );
+
+        resultDTO.getResult().add(new Result(criterias, customers));
     }
 
 }

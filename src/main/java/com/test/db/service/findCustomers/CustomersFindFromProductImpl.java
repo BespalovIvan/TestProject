@@ -1,6 +1,9 @@
 package com.test.db.service.findCustomers;
 
+import com.test.db.domain.Criteria;
 import com.test.db.domain.Customer;
+import com.test.db.domain.Result;
+import com.test.db.domain.SearchResultDTO;
 import com.test.db.repository.DBRepository;
 import org.json.JSONObject;
 
@@ -17,9 +20,16 @@ public class CustomersFindFromProductImpl implements CustomersFindService {
     }
 
     @Override
-    public List<Customer> find() {
-        return dbRepository.findCustomersFromProductNameAndMinCount(criteria.optString("productName"),
+    public void find(SearchResultDTO resultDTO) {
+        List<Customer> customers = dbRepository.findCustomersFromProductNameAndMinCount(criteria.optString("productName"),
                 Integer.parseInt(criteria.optString("minTimes")));
+
+        Criteria criterias = new Criteria(
+                "productName", criteria.optString("productName"),
+                "minTimes", criteria.optString("minTimes")
+        );
+
+        resultDTO.getResult().add(new Result(criterias, customers));
     }
 
 }

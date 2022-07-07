@@ -14,6 +14,8 @@ public class CustomerSearch extends CustomerService {
 
     private final DBRepository dbRepository;
 
+    private SearchResultDTO resultDTO = new SearchResultDTO("search");
+
     public CustomerSearch(FileService fileService, DBRepository dbRepository) {
         super(fileService);
         this.dbRepository = dbRepository;
@@ -21,7 +23,7 @@ public class CustomerSearch extends CustomerService {
 
     @Override
     public ResultDTO getResult() {
-        return new SearchResultDTO("search", result);
+        return resultDTO;
     }
 
     @Override
@@ -30,9 +32,8 @@ public class CustomerSearch extends CustomerService {
         if (criteria == null) throw new CustomException("Критерий criteria не был найден в json.");
 
         for (int i = 0; i < criteria.length(); i++) {
-            checkExistAndAdd(criteria.getJSONObject(i).toString(),
-                    CriteriaFactory.createCustomersFindService(i, criteria, dbRepository)
-                            .find());
+            CriteriaFactory.createCustomersFindService(i, criteria, dbRepository).find(resultDTO);
         }
     }
+
 }
