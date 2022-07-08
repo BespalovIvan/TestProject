@@ -6,6 +6,7 @@ import com.test.db.exception.CustomException;
 import com.test.db.repository.DBRepository;
 import com.test.db.service.CustomerService;
 import com.test.db.service.FileService;
+import com.test.db.service.findCustomers.CustomerFindStatImpl;
 import org.json.JSONObject;
 
 /*
@@ -19,6 +20,7 @@ TODO класс выбивается из концепции общего при
 public class CustomerStat extends CustomerService {
 
     private final DBRepository dbRepository;
+    private StatResultDTO resultDTO = new StatResultDTO("stat");
 
     public CustomerStat(FileService fileService, DBRepository dbRepository) {
         super(fileService);
@@ -27,12 +29,12 @@ public class CustomerStat extends CustomerService {
 
     @Override
     public ResultDTO getResult() {
-        return new StatResultDTO("stat");
+        return resultDTO;
     }
 
     @Override
     public void readJSONAndFind(JSONObject fileObject) throws CustomException {
-        dbRepository.getStat(fileObject.optString("startDate"), fileObject.optString("endDate"));
+        new CustomerFindStatImpl(fileObject,dbRepository).findStat(resultDTO);
     }
 
 }

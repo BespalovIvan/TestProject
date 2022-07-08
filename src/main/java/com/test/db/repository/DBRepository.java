@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DBRepository {
 
@@ -74,19 +75,25 @@ public class DBRepository {
                 "WHERE p.date BETWEEN TO_DATE('%s','YYYY-MM-DD') and TO_DATE('%s','YYYY-MM-DD')\n" +
                 "GROUP BY c.id, c.first_name, last_name, product_name,i.id\n" +
                 "ORDER BY first_name,last_name,SUM(price) DESC;\n",startDate,endDate);
-            Map<String,Integer> purchases = new HashMap<>();
-            List<Customer> customers = new ArrayList<>();
+            Map<Integer,Customer> customers = new HashMap<>();
         try (Statement statement = PostgresConnection.getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery(queryGetCustomers)) {
             while (resultSet.next()) {
-                customers.add(new Customer(resultSet.getInt(1),
-                        resultSet.getString(2),
-                        resultSet.getString(3),purchases));
-                purchases.put(resultSet.getString(5),resultSet.getInt(6));
+                if(customers.containsKey(resultSet.getInt(1))){
+                    customers.get(resultSet.getInt(1)).getPurchases().put(resultSet.getString(5),
+                            resultSet.getInt(6));
+                }
+                else {
+                    Map<String,Integer> purchases = new HashMap<>();
+                    purchases.put(resultSet.getString(5),resultSet.getInt(6));
+                    customers.put(resultSet.getInt(1),new Customer(resultSet.getInt(1),
+                            resultSet.getString(2),
+                            resultSet.getString(3),purchases));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return customers;
+        return new ArrayList<>(customers.values());
     }
 }
