@@ -9,12 +9,9 @@ import java.util.Map;
 
 @Getter
 @AllArgsConstructor
-public class Result {
+public class ResultSearch {
 
-    private Map<Criteria, List<Customer>> results;
+    private Map<String,String> criteria;
+    private List<Customer> results;
 
-    @Override
-    public String toString() {
-        return results.toString();
-    }
 }

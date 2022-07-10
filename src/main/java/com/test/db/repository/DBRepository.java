@@ -50,8 +50,7 @@ public class DBRepository {
         try (Statement statement = PostgresConnection.getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
-                customers.add(new Customer(resultSet.getInt(1),
-                        resultSet.getString(2), resultSet.getString(3)));
+                customers.add(new Customer(resultSet.getString(2), resultSet.getString(3)));
             }
         } catch (SQLException e) {
             System.out.println("connection not established ");

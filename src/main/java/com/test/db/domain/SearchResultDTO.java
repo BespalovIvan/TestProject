@@ -8,15 +8,15 @@ import java.util.List;
 public class SearchResultDTO extends ResultDTO {
 
     @Getter
-    private List<Result> result;
+    private List<ResultSearch> resultSearch;
 
     public SearchResultDTO(String type) {
         super(type);
-        this.result = new ArrayList<>();
+        this.resultSearch = new ArrayList<>();
     }
 
     @Override
     public String toString() {
-        return "type:" + type + ", "  + "results: " + result;
+        return "type:" + type + ", "  + "results: " + resultSearch;
     }
 }

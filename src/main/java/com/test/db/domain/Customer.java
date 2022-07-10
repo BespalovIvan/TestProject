@@ -20,7 +20,10 @@ public class Customer {
         this.firstname = firstname;
         this.lastname = lastname;
     }
-
+    public Customer(String firstname, String lastname) {
+        this.lastname = lastname;
+        this.firstname =firstname;
+    }
     @Override
     public String toString() {
         return "{" + "lastname: " + lastname + " ," + "firstname: " + firstname + " purchases " + purchases + "}";

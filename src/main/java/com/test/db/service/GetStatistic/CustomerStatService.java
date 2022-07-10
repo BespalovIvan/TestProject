@@ -1,4 +1,4 @@
-package com.test.db.service.findCustomers;
+package com.test.db.service.GetStatistic;
 
 import com.test.db.domain.StatResultDTO;
 

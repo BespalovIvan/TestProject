@@ -1,8 +1,7 @@
 package com.test.db.service.findCustomers;
 
-import com.test.db.domain.Criteria;
 import com.test.db.domain.Customer;
-import com.test.db.domain.Result;
+import com.test.db.domain.ResultSearch;
 import com.test.db.domain.SearchResultDTO;
 import com.test.db.repository.DBRepository;
 import org.json.JSONObject;
@@ -24,10 +23,10 @@ public class CustomersFindImpl implements CustomersFindService {
     @Override
     public void find(SearchResultDTO resultDTO) {
         List<Customer> customer = dbRepository.findCustomersFromLastName(criteria.optString("lastName"));
-        Map<Criteria,List<Customer>> mapResult = new HashMap<>();
-        mapResult.put(new Criteria("lastName",criteria.optString("lastName")),customer);
-        Result result = new Result(mapResult);
-        resultDTO.getResult().add(result);
+        Map<String,String> mapCriteria = new HashMap<>();
+        mapCriteria.put("lastName",criteria.optString("lastName"));
+        ResultSearch resultSearch = new ResultSearch(mapCriteria,customer);
+        resultDTO.getResultSearch().add(resultSearch);
     }
 
 }

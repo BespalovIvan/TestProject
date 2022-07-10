@@ -8,17 +8,10 @@ import java.util.List;
 public class StatResultDTO extends ResultDTO {
 
     @Getter
-    private List<Result> result;
+    private List<ResultStat> resultStats;
 
     public StatResultDTO(String type) {
         super(type);
-        this.result = new ArrayList<>();
+        this.resultStats = new ArrayList<>();
     }
-
-
-    @Override
-    public String toString() {
-        return "type:" + type + ", "  + "results: " + result;
-    }
-
 }

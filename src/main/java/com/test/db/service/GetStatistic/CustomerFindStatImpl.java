@@ -1,8 +1,8 @@
-package com.test.db.service.findCustomers;
+package com.test.db.service.GetStatistic;
 
-import com.test.db.domain.Criteria;
 import com.test.db.domain.Customer;
-import com.test.db.domain.Result;
+import com.test.db.domain.ResultSearch;
+import com.test.db.domain.ResultStat;
 import com.test.db.domain.StatResultDTO;
 import com.test.db.repository.DBRepository;
 import org.json.JSONObject;
@@ -27,12 +27,5 @@ public class CustomerFindStatImpl implements CustomerStatService {
         List<Customer> customers = dbRepository.getStat(criteria.optString("startDate"),
                 criteria.optString("endDate"));
 
-        Criteria criterias = new Criteria(
-                "startDate",criteria.optString("startDate"),
-                "endDate", criteria.optString("endDate"));
-        Map<Criteria,List<Customer>> mapResult = new HashMap<>();
-        mapResult.put(new Criteria("badCustomers",criteria.optString("badCustomers")),customers);
-        Result result = new Result(mapResult);
-        resultDTO.getResult().add(result);
     }
 }

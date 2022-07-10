@@ -1,8 +1,7 @@
 package com.test.db.service.findCustomers;
 
-import com.test.db.domain.Criteria;
 import com.test.db.domain.Customer;
-import com.test.db.domain.Result;
+import com.test.db.domain.ResultSearch;
 import com.test.db.domain.SearchResultDTO;
 import com.test.db.repository.DBRepository;
 import org.json.JSONObject;
@@ -26,14 +25,11 @@ public class CustomersFindFromProductImpl implements CustomersFindService {
         List<Customer> customers = dbRepository.findCustomersFromProductNameAndMinCount(criteria.optString("productName"),
                 Integer.parseInt(criteria.optString("minTimes")));
 
-        Criteria criterias = new Criteria(
-                "productName", criteria.optString("productName"),
-                "minTimes", criteria.optString("minTimes")
-        );
-        Map<Criteria,List<Customer>> mapResult = new HashMap<>();
-        mapResult.put(criterias,customers);
-        Result result = new Result(mapResult);
-        resultDTO.getResult().add(result);
+        Map<String,String> mapCriteria = new HashMap<>();
+        mapCriteria.put("productName",criteria.optString("productName"));
+        mapCriteria.put("minTimes", criteria.optString("minTimes"));
+        ResultSearch resultSearch = new ResultSearch(mapCriteria,customers);
+        resultDTO.getResultSearch().add(resultSearch);
     }
 
 }

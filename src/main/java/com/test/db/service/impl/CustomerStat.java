@@ -6,7 +6,7 @@ import com.test.db.exception.CustomException;
 import com.test.db.repository.DBRepository;
 import com.test.db.service.CustomerService;
 import com.test.db.service.FileService;
-import com.test.db.service.findCustomers.CustomerFindStatImpl;
+import com.test.db.service.GetStatistic.CustomerFindStatImpl;
 import org.json.JSONObject;
 
 /*
@@ -36,5 +36,4 @@ public class CustomerStat extends CustomerService {
     public void readJSONAndFind(JSONObject fileObject) throws CustomException {
         new CustomerFindStatImpl(fileObject,dbRepository).findStat(resultDTO);
     }
-
 }
