@@ -1,17 +1,20 @@
 package com.test.db.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@Getter
 @AllArgsConstructor
 public class Result {
 
-    private Criteria criteria;
-    private List<Customer> list;
+    private Map<Criteria, List<Customer>> results;
 
     @Override
     public String toString() {
-        return  criteria + "," + "results: " + list ;
+        return results.toString();
     }
 }

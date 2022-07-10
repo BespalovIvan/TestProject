@@ -2,13 +2,11 @@ package com.test.db.repository;
 
 import com.test.db.config.PostgresConnection;
 import com.test.db.domain.Customer;
-import com.test.db.domain.Item;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class DBRepository {
 

@@ -7,7 +7,9 @@ import com.test.db.domain.StatResultDTO;
 import com.test.db.repository.DBRepository;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CustomerFindStatImpl implements CustomerStatService {
 
@@ -28,7 +30,9 @@ public class CustomerFindStatImpl implements CustomerStatService {
         Criteria criterias = new Criteria(
                 "startDate",criteria.optString("startDate"),
                 "endDate", criteria.optString("endDate"));
-
-        resultDTO.getResult().add(new Result(criterias,customers));
+        Map<Criteria,List<Customer>> mapResult = new HashMap<>();
+        mapResult.put(new Criteria("badCustomers",criteria.optString("badCustomers")),customers);
+        Result result = new Result(mapResult);
+        resultDTO.getResult().add(result);
     }
 }

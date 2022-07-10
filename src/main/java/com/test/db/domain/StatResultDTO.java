@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StatResultDTO extends ResultDTO {
-    //для Stat определяем какие-то другие
 
     @Getter
     private List<Result> result;

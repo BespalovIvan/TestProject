@@ -7,7 +7,9 @@ import com.test.db.domain.SearchResultDTO;
 import com.test.db.repository.DBRepository;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CustomersFindFromExpensesImpl implements CustomersFindService {
 
@@ -28,8 +30,10 @@ public class CustomersFindFromExpensesImpl implements CustomersFindService {
                 "minExpenses", criteria.optString("minExpenses"),
                 "maxExpenses", criteria.optString("maxExpenses")
         );
-
-        resultDTO.getResult().add(new Result(criterias, customers));
+        Map<Criteria,List<Customer>> mapResult = new HashMap<>();
+        mapResult.put(criterias,customers);
+        Result result = new Result(mapResult);
+        resultDTO.getResult().add(result);
     }
 
 }
