@@ -1,17 +1,15 @@
 package com.test.db.domain;
 
 import lombok.Getter;
-
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Setter;
 
 public class StatResultDTO extends ResultDTO {
 
     @Getter
-    private List<ResultStat> resultStats;
+    @Setter
+    private ResultStat resultStats;
 
     public StatResultDTO(String type) {
         super(type);
-        this.resultStats = new ArrayList<>();
     }
 }

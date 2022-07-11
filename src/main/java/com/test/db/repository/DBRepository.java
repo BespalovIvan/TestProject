@@ -2,10 +2,15 @@ package com.test.db.repository;
 
 import com.test.db.config.PostgresConnection;
 import com.test.db.domain.Customer;
+import com.test.db.domain.CustomerForStat;
+import com.test.db.exception.CustomException;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class DBRepository {
@@ -50,7 +55,7 @@ public class DBRepository {
         try (Statement statement = PostgresConnection.getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
-                customers.add(new Customer(resultSet.getString(2), resultSet.getString(3)));
+                customers.add(new Customer(resultSet.getString(3),resultSet.getString(2)));
             }
         } catch (SQLException e) {
             System.out.println("connection not established ");
@@ -64,33 +69,100 @@ public class DBRepository {
         return customers;
     }
 
-        public List<Customer> getStat (String startDate, String endDate) {
-        String queryGetCustomers = String.format("select c.id, first_name, last_name,i.id, product_name,SUM(price)\n" +
+        public List<CustomerForStat> getStat (String startDate, String endDate) {
+            String queryGetCustomers = String.format("select c.id, first_name, last_name,i.id, product_name,SUM(price)\n" +
+                    "from customers c \n" +
+                    "JOIN purchases p ON (c.id = p.customer_id) \n" +
+                    "JOIN items i ON (p.item_id = i.id) \n" +
+                    "WHERE p.date BETWEEN TO_DATE('%s','YYYY-MM-DD') and TO_DATE('%s','YYYY-MM-DD')\n" +
+                    "GROUP BY c.id, c.first_name, last_name, product_name,i.id\n" +
+                    "ORDER BY first_name,last_name,SUM(price) DESC;\n", startDate, endDate);
+            Map<Integer, CustomerForStat> customers = new HashMap<>();
+            try (Statement statement = PostgresConnection.getConnection().createStatement();
+                 ResultSet resultSet = statement.executeQuery(queryGetCustomers)) {
+                while (resultSet.next()) {
+                    if (customers.containsKey(resultSet.getInt(1))) {
+                        customers.get(resultSet.getInt(1)).getPurchases().put(resultSet.getString(5),
+                                resultSet.getInt(6));
+
+                    } else {
+                        Map<String, Integer> purchases = new HashMap<>();
+                        purchases.put(resultSet.getString(5), resultSet.getInt(6));
+                        customers.put(resultSet.getInt(1), new CustomerForStat(resultSet.getInt(1),
+                                resultSet.getString(3) + " " + resultSet.getString(2),purchases));
+                    }
+                }
+            } catch (SQLException e) {
+                System.out.println("connection not established ");
+                e.printStackTrace();
+            }
+            return new ArrayList<>(customers.values());
+        }
+        public Integer getTotalDays(String startDate,String endDate){
+        String queryGetTotalDays = String.format("SELECT sum((extract(dow from d) between 1 and 5)::int ) month_working_days_till_date\n" +
+                "FROM generate_series(date_trunc('day', TO_DATE('%s','YYYY-MM-DD')) , TO_DATE('%s','YYYY-MM-DD'), interval '1 day') x(d);",startDate,endDate);
+        Integer result = null;
+            try (Statement statement = PostgresConnection.getConnection().createStatement();
+                 ResultSet resultSet = statement.executeQuery(queryGetTotalDays)){
+                while (resultSet.next()){
+                    result = resultSet.getInt(1);
+                }
+            }
+            catch (SQLException e){
+                System.out.println("connection not established ");
+                e.printStackTrace();
+            }
+            if(result == null){
+                throw new CustomException("dates are not correct");
+            }
+           return result;
+        }
+    public Integer getTotalExpenses(String startDate,String endDate){
+        String queryGetTotalDays = String.format("select  DISTINCT SUM(SUM(price)) OVER () total_sum\n" +
+                "from customers c \n" +
+                "JOIN purchases p ON (c.id = p.customer_id) \n" +
+                "JOIN items i ON (p.item_id = i.id) \n" +
+                "WHERE p.date BETWEEN TO_DATE('%s','YYYY-MM-DD') and TO_DATE('%S','YYYY-MM-DD')\n" +
+                "GROUP BY c.id, c.first_name, last_name;",startDate,endDate);
+        Integer result = null;
+        try (Statement statement = PostgresConnection.getConnection().createStatement();
+             ResultSet resultSet = statement.executeQuery(queryGetTotalDays)){
+            while (resultSet.next()){
+                result = resultSet.getInt(1);
+            }
+        }
+        catch (SQLException e){
+            System.out.println("connection not established ");
+            e.printStackTrace();
+        }
+        if(result == null){
+            throw new CustomException("dates are not correct");
+        }
+        return result;
+    }
+    public BigDecimal getAVGExpenses(String startDate,String endDate){
+        String queryGetTotalDays = String.format("select  DISTINCT AVG(SUM(price)) OVER () total_sum\n" +
                 "from customers c \n" +
                 "JOIN purchases p ON (c.id = p.customer_id) \n" +
                 "JOIN items i ON (p.item_id = i.id) \n" +
                 "WHERE p.date BETWEEN TO_DATE('%s','YYYY-MM-DD') and TO_DATE('%s','YYYY-MM-DD')\n" +
-                "GROUP BY c.id, c.first_name, last_name, product_name,i.id\n" +
-                "ORDER BY first_name,last_name,SUM(price) DESC;\n",startDate,endDate);
-            Map<Integer,Customer> customers = new HashMap<>();
+                "GROUP BY c.id, c.first_name, last_name;",startDate,endDate);
+        BigDecimal result = null;
         try (Statement statement = PostgresConnection.getConnection().createStatement();
-             ResultSet resultSet = statement.executeQuery(queryGetCustomers)) {
-            while (resultSet.next()) {
-                if(customers.containsKey(resultSet.getInt(1))){
-                    customers.get(resultSet.getInt(1)).getPurchases().put(resultSet.getString(5),
-                            resultSet.getInt(6));
-                }
-                else {
-                    Map<String,Integer> purchases = new HashMap<>();
-                    purchases.put(resultSet.getString(5),resultSet.getInt(6));
-                    customers.put(resultSet.getInt(1),new Customer(resultSet.getInt(1),
-                            resultSet.getString(2),
-                            resultSet.getString(3),purchases));
-                }
+             ResultSet resultSet = statement.executeQuery(queryGetTotalDays)){
+            while (resultSet.next()){
+               result = resultSet.getBigDecimal(1);
+               result = result.setScale(1, RoundingMode.HALF_UP);
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e){
+            System.out.println("connection not established ");
             e.printStackTrace();
         }
-        return new ArrayList<>(customers.values());
+        if(result == null){
+            throw new CustomException("dates are not correct");
+        }
+        return result;
     }
-}
+    }
+

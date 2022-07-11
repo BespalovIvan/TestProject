@@ -14,9 +14,4 @@ public class SearchResultDTO extends ResultDTO {
         super(type);
         this.resultSearch = new ArrayList<>();
     }
-
-    @Override
-    public String toString() {
-        return "type:" + type + ", "  + "results: " + resultSearch;
-    }
 }

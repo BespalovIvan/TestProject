@@ -9,24 +9,12 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 public class Customer {
-
     private Integer id;
-    private String firstname;
     private String lastname;
-    private Map<String,Integer> purchases;
-
-    public Customer (Integer id,String firstname, String lastname){
-        this.id = id;
+    private String firstname;
+    public Customer(String lastname, String firstname) {
+        this.lastname = lastname;
         this.firstname = firstname;
-        this.lastname = lastname;
-    }
-    public Customer(String firstname, String lastname) {
-        this.lastname = lastname;
-        this.firstname =firstname;
-    }
-    @Override
-    public String toString() {
-        return "{" + "lastname: " + lastname + " ," + "firstname: " + firstname + " purchases " + purchases + "}";
-    }
 
+    }
 }

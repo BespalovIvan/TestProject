@@ -28,5 +28,4 @@ public class CustomersFindImpl implements CustomersFindService {
         ResultSearch resultSearch = new ResultSearch(mapCriteria,customer);
         resultDTO.getResultSearch().add(resultSearch);
     }
-
 }
