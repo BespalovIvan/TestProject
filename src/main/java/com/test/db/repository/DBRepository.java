@@ -4,10 +4,8 @@ import com.test.db.config.PostgresConnection;
 import com.test.db.domain.Customer;
 import com.test.db.domain.CustomerForStat;
 import com.test.db.domain.Item;
-import com.test.db.exception.CustomException;
+import com.test.db.domain.ResultStat;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -68,16 +66,19 @@ public class DBRepository {
 
         return customers;
     }
-
-    public List<CustomerForStat> getStat(String startDate, String endDate) {
-        String queryGetCustomers = String.format("select c.id, first_name, last_name,i.id, product_name,SUM(price)\n" +
+    public ResultStat getStat(String startDate, String endDate) {
+        String queryGetCustomers = String.format("select c.id, first_name, last_name,i.id, product_name,SUM(price), \n" +
+                "(SELECT sum((extract(dow from d) between 1 and 5)::int ) total_days\n" +
+                "FROM generate_series(date_trunc('day', TO_DATE('%s','YYYY-MM-DD')) , TO_DATE('%s','YYYY-MM-DD'), interval '1 day') x(d))\n" +
                 "from customers c \n" +
                 "JOIN purchases p ON (c.id = p.customer_id) \n" +
                 "JOIN items i ON (p.item_id = i.id) \n" +
-                "WHERE p.date BETWEEN TO_DATE('%s','YYYY-MM-DD') and TO_DATE('%s','YYYY-MM-DD')\n" +
-                "GROUP BY c.id, c.first_name, last_name, product_name,i.id\n" +
-                "ORDER BY first_name,last_name,SUM(price) DESC;\n", startDate, endDate);
+                "WHERE p.date BETWEEN TO_DATE('%s','YYYY-MM-DD') and TO_DATE('%s','YYYY-MM-DD') and extract(dow from p.date) != 5 and  extract(dow from p.date) != 6\n" +
+                "GROUP BY c.id, c.first_name, last_name,product_name,i.id;", startDate, endDate,startDate,endDate);
         Map<Integer, CustomerForStat> customers = new HashMap<>();
+        int totalDays = 0;
+        int totalExpenses = 0;
+        int avgExpenses = 0;
         try (Statement statement = PostgresConnection.getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery(queryGetCustomers)) {
             while (resultSet.next()) {
@@ -90,77 +91,16 @@ public class DBRepository {
                     purchases.add(new Item(resultSet.getString(5),resultSet.getInt(6)));
                     customers.put(resultSet.getInt(1), new CustomerForStat(resultSet.getString(3) + " " + resultSet.getString(2), purchases,resultSet.getInt(6)));
                 }
+                totalDays = resultSet.getInt(7);
             }
         } catch (SQLException e) {
             System.out.println("connection not established ");
             e.printStackTrace();
         }
-        return new ArrayList<>(customers.values());
-    }
-
-    public Integer getTotalDays(String startDate, String endDate) {
-        String queryGetTotalDays = String.format("SELECT sum((extract(dow from d) between 1 and 5)::int ) month_working_days_till_date\n" +
-                "FROM generate_series(date_trunc('day', TO_DATE('%s','YYYY-MM-DD')) , TO_DATE('%s','YYYY-MM-DD'), interval '1 day') x(d);", startDate, endDate);
-        Integer result = null;
-        try (Statement statement = PostgresConnection.getConnection().createStatement();
-             ResultSet resultSet = statement.executeQuery(queryGetTotalDays)) {
-            while (resultSet.next()) {
-                result = resultSet.getInt(1);
-            }
-        } catch (SQLException e) {
-            System.out.println("connection not established ");
-            e.printStackTrace();
+        for(CustomerForStat c: customers.values()){
+            totalExpenses = totalExpenses + c.getTotalExpenses();
+            avgExpenses = totalExpenses / customers.values().size();
         }
-        if (result == null) {
-            throw new CustomException("dates are not correct");
-        }
-        return result;
-    }
-
-    public Integer getTotalExpenses(String startDate, String endDate) {
-        String queryGetTotalDays = String.format("select  DISTINCT SUM(SUM(price)) OVER () total_sum\n" +
-                "from customers c \n" +
-                "JOIN purchases p ON (c.id = p.customer_id) \n" +
-                "JOIN items i ON (p.item_id = i.id) \n" +
-                "WHERE p.date BETWEEN TO_DATE('%s','YYYY-MM-DD') and TO_DATE('%S','YYYY-MM-DD')\n" +
-                "GROUP BY c.id, c.first_name, last_name;", startDate, endDate);
-        Integer result = null;
-        try (Statement statement = PostgresConnection.getConnection().createStatement();
-             ResultSet resultSet = statement.executeQuery(queryGetTotalDays)) {
-            while (resultSet.next()) {
-                result = resultSet.getInt(1);
-            }
-        } catch (SQLException e) {
-            System.out.println("connection not established ");
-            e.printStackTrace();
-        }
-        if (result == null) {
-            throw new CustomException("dates are not correct");
-        }
-        return result;
-    }
-
-    public BigDecimal getAVGExpenses(String startDate, String endDate) {
-        String queryGetTotalDays = String.format("select  DISTINCT AVG(SUM(price)) OVER () total_sum\n" +
-                "from customers c \n" +
-                "JOIN purchases p ON (c.id = p.customer_id) \n" +
-                "JOIN items i ON (p.item_id = i.id) \n" +
-                "WHERE p.date BETWEEN TO_DATE('%s','YYYY-MM-DD') and TO_DATE('%s','YYYY-MM-DD')\n" +
-                "GROUP BY c.id, c.first_name, last_name;", startDate, endDate);
-        BigDecimal result = null;
-        try (Statement statement = PostgresConnection.getConnection().createStatement();
-             ResultSet resultSet = statement.executeQuery(queryGetTotalDays)) {
-            while (resultSet.next()) {
-                result = resultSet.getBigDecimal(1);
-                result = result.setScale(1, RoundingMode.HALF_UP);
-            }
-        } catch (SQLException e) {
-            System.out.println("connection not established ");
-            e.printStackTrace();
-        }
-        if (result == null) {
-            throw new CustomException("dates are not correct");
-        }
-        return result;
+        return  new ResultStat(new ArrayList<>(customers.values()),totalDays,totalExpenses,avgExpenses);
     }
 }

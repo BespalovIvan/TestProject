@@ -12,6 +12,6 @@ public class ResultStat {
     private List<CustomerForStat> customers;
     private Integer totalDays;
     private Integer totalExpenses;
-    private BigDecimal avgExpenses ;
+    private int avgExpenses ;
 
 }

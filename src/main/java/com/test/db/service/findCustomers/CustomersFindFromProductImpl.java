@@ -29,7 +29,7 @@ public class CustomersFindFromProductImpl implements CustomersFindService {
         mapCriteria.put("productName",criteria.optString("productName"));
         mapCriteria.put("minTimes", criteria.optString("minTimes"));
         ResultSearch resultSearch = new ResultSearch(mapCriteria,customers);
-        resultDTO.getResultSearch().add(resultSearch);
+        resultDTO.getResult().add(resultSearch);
     }
 
 }

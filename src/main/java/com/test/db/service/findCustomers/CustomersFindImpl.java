@@ -26,6 +26,6 @@ public class CustomersFindImpl implements CustomersFindService {
         Map<String,String> mapCriteria = new HashMap<>();
         mapCriteria.put("lastName",criteria.optString("lastName"));
         ResultSearch resultSearch = new ResultSearch(mapCriteria,customer);
-        resultDTO.getResultSearch().add(resultSearch);
+        resultDTO.getResult().add(resultSearch);
     }
 }

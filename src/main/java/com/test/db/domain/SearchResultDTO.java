@@ -8,10 +8,10 @@ import java.util.List;
 public class SearchResultDTO extends ResultDTO {
 
     @Getter
-    private List<ResultSearch> resultSearch;
+    private List<ResultSearch> result;
 
     public SearchResultDTO(String type) {
         super(type);
-        this.resultSearch = new ArrayList<>();
+        this.result = new ArrayList<>();
     }
 }

@@ -28,7 +28,7 @@ public class CustomersFindFromExpensesImpl implements CustomersFindService {
         mapCriteria.put("minExpenses", criteria.optString("minExpenses"));
         mapCriteria.put("maxExpenses", criteria.optString("maxExpenses"));
         ResultSearch resultSearch = new ResultSearch(mapCriteria,customers);
-        resultDTO.getResultSearch().add(resultSearch);
+        resultDTO.getResult().add(resultSearch);
     }
 
 }

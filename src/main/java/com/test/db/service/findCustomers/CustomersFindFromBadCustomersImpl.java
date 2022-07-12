@@ -26,7 +26,7 @@ public class CustomersFindFromBadCustomersImpl implements CustomersFindService {
         Map<String,String> mapCriteria = new HashMap<>();
         mapCriteria.put("badCustomers",criteria.optString("badCustomers"));
         ResultSearch resultSearch = new ResultSearch(mapCriteria,customers);
-        resultDTO.getResultSearch().add(resultSearch);
+        resultDTO.getResult().add(resultSearch);
 
     }
 
