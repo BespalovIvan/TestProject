@@ -2,14 +2,15 @@ package com.test.db.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
-import java.util.Map;
+import java.util.List;
 
 @Getter
+@Setter
 @AllArgsConstructor
 public class CustomerForStat {
-    private Integer id;
-    private String name;
-    private Map<String,Integer> purchases;
-
+    private String firstname;
+    private List<Item> purchases;
+    private Integer totalExpenses;
 }

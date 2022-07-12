@@ -1,20 +1,13 @@
 package com.test.db.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
 public class Item {
 
-    private Integer id;
     private String productName;
-    private Integer price;
+    private Integer expenses;
 
-    @Override
-    public String toString() {
-        return "Item{" +
-                "id=" + id +
-                ", productName='" + productName + '\'' +
-                ", price=" + price +
-                '}';
-    }
 }
