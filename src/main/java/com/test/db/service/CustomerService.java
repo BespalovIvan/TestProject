@@ -1,6 +1,8 @@
 package com.test.db.service;
 
-import com.test.db.domain.ResultDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.test.db.domain.dto.ResultDTO;
 import com.test.db.exception.CustomException;
 import org.json.JSONObject;
 
@@ -18,9 +20,13 @@ public abstract class CustomerService {
     public abstract ResultDTO getResult();
 
     public void start() throws CustomException {
-                readJSONAndFind(fileService.readFile());
-                fileService.writeFile(new JSONObject(getResult()).toString());
-            }
+        readJSONAndFind(fileService.readFile());
+        try {
+            fileService.writeFile(new ObjectMapper().writeValueAsString(getResult()));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
         }
+    }
+}
 
 

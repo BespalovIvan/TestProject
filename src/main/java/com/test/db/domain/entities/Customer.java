@@ -1,6 +1,6 @@
-package com.test.db.domain;
+package com.test.db.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class Customer {
-
+    @JsonIgnore
     private Integer id;
     private String lastname;
     private String firstname;

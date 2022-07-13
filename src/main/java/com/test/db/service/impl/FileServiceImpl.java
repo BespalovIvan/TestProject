@@ -1,16 +1,13 @@
 package com.test.db.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.test.db.domain.ResultDTO;
 import com.test.db.exception.CustomException;
 import com.test.db.service.FileService;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 import java.util.Scanner;
 
 public class FileServiceImpl implements FileService {

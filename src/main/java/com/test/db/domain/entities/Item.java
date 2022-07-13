@@ -1,4 +1,4 @@
-package com.test.db.domain;
+package com.test.db.domain.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

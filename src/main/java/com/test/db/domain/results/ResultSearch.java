@@ -1,9 +1,9 @@
-package com.test.db.domain;
+package com.test.db.domain.results;
 
+import com.test.db.domain.entities.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

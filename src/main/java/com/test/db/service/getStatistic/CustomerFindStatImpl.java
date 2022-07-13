@@ -1,7 +1,6 @@
-package com.test.db.service.GetStatistic;
+package com.test.db.service.getStatistic;
 
-import com.test.db.domain.ResultStat;
-import com.test.db.domain.StatResultDTO;
+import com.test.db.domain.dto.StatResultDTO;
 import com.test.db.repository.DBRepository;
 import org.json.JSONObject;
 
@@ -15,11 +14,13 @@ public class CustomerFindStatImpl implements CustomerStatService {
         this.dbRepository = dbRepository;
     }
 
-
     @Override
     public void findStat(StatResultDTO resultDTO) {
-        ResultStat result = dbRepository.getStat(desiredDates.optString("startDate"),
+        StatResultDTO result = dbRepository.getStat(desiredDates.optString("startDate"),
                 desiredDates.optString("endDate"));
-        resultDTO.setResultStats(result);
+        resultDTO.setTotalDays(result.getTotalDays());
+        resultDTO.setCustomers(result.getCustomers());
+        resultDTO.setTotalExpenses(result.getTotalExpenses());
+        resultDTO.setAvgExpenses(result.getAvgExpenses());
     }
 }

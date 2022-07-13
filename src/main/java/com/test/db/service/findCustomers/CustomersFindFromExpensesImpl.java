@@ -1,8 +1,8 @@
 package com.test.db.service.findCustomers;
 
-import com.test.db.domain.Customer;
-import com.test.db.domain.ResultSearch;
-import com.test.db.domain.SearchResultDTO;
+import com.test.db.domain.entities.Customer;
+import com.test.db.domain.results.ResultSearch;
+import com.test.db.domain.dto.SearchResultDTO;
 import com.test.db.repository.DBRepository;
 import org.json.JSONObject;
 
@@ -22,13 +22,14 @@ public class CustomersFindFromExpensesImpl implements CustomersFindService {
 
     @Override
     public void find(SearchResultDTO resultDTO) {
-        List<Customer> customers = dbRepository.findCustomerFromMinAndMaxExpenses(Integer.parseInt(criteria.optString("minExpenses")),
+        List<Customer> customers = dbRepository
+                .findCustomerFromMinAndMaxExpenses(Integer.parseInt(criteria.optString("minExpenses")),
                 Integer.parseInt(criteria.optString("maxExpenses")));
         Map<String,String> mapCriteria = new HashMap<>();
         mapCriteria.put("minExpenses", criteria.optString("minExpenses"));
         mapCriteria.put("maxExpenses", criteria.optString("maxExpenses"));
         ResultSearch resultSearch = new ResultSearch(mapCriteria,customers);
-        resultDTO.getResult().add(resultSearch);
+        resultDTO.getResults().add(resultSearch);
     }
 
 }

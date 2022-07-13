@@ -1,7 +1,7 @@
 package com.test.db.service.impl;
 
-import com.test.db.domain.ResultDTO;
-import com.test.db.domain.SearchResultDTO;
+import com.test.db.domain.dto.ResultDTO;
+import com.test.db.domain.dto.SearchResultDTO;
 import com.test.db.exception.CustomException;
 import com.test.db.repository.DBRepository;
 import com.test.db.service.CriteriaFactory;
@@ -13,8 +13,7 @@ import org.json.JSONObject;
 public class CustomerSearch extends CustomerService {
 
     private final DBRepository dbRepository;
-
-    private SearchResultDTO resultDTO = new SearchResultDTO("search");
+    private final SearchResultDTO resultDTO = new SearchResultDTO("search");
 
     public CustomerSearch(FileService fileService, DBRepository dbRepository) {
         super(fileService);
@@ -34,6 +33,6 @@ public class CustomerSearch extends CustomerService {
         for (int i = 0; i < criteria.length(); i++) {
             CriteriaFactory.createCustomersFindService(i, criteria, dbRepository).find(resultDTO);
         }
-
     }
 }
+

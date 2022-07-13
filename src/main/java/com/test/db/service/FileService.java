@@ -8,5 +8,4 @@ public interface FileService {
     JSONObject readFile() throws CustomException;
 
     void writeFile(String result);
-
 }
