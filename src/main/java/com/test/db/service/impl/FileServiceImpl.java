@@ -1,6 +1,7 @@
 package com.test.db.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.test.db.domain.dto.ResultDTO;
 import com.test.db.exception.CustomException;
 import com.test.db.service.FileService;
 import org.json.JSONObject;
@@ -34,10 +35,10 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void writeFile(String result) {
-
+    public void writeFile(ResultDTO result) {
         try {
-            new ObjectMapper().writeValue(new File(outputFile), result);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(outputFile), result);
         } catch (IOException e) {
             throw new CustomException("Не удалось записать файл");
         }

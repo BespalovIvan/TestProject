@@ -14,5 +14,5 @@ import java.util.List;
 public class CustomerForStat {
     private String name;
     private List<Item> purchases;
-    private Double totalExpenses;
+    private int totalExpenses;
 }

@@ -14,14 +14,14 @@ public class StatResultDTO extends ResultDTO {
 
     private Integer totalDays;
     private List<CustomerForStat> customers;
-    private Double totalExpenses;
+    private int totalExpenses;
     private Double avgExpenses;
 
     public StatResultDTO(String type) {
         super(type);
     }
 
-    public StatResultDTO(String type, Integer totalDays, List<CustomerForStat> customers, Double totalExpenses, Double avgExpenses) {
+    public StatResultDTO(String type, Integer totalDays, List<CustomerForStat> customers, int totalExpenses, Double avgExpenses) {
         super(type);
         this.totalDays = totalDays;
         this.customers = customers;

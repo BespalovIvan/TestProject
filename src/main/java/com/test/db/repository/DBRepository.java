@@ -83,7 +83,7 @@ public class DBRepository {
                 "GROUP BY c.id, c.first_name, last_name,product_name,i.id;", startDate, endDate, startDate, endDate);
         Map<Integer, CustomerForStat> customers = new HashMap<>();
         int totalDays = 0;
-        double totalExpenses = 0.0;
+        int totalExpenses = 0;
         double avgExpenses = 0.0;
         try (Statement statement = PostgresConnection.getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery(queryGetCustomers)) {
@@ -92,9 +92,9 @@ public class DBRepository {
                     customers.get(resultSet.getInt(1))
                             .getPurchases()
                             .add(new Item(resultSet.getString(5), resultSet.getInt(6)));
-                    Double total = customers.get(resultSet.getInt(1)).getTotalExpenses();
+                    int total = customers.get(resultSet.getInt(1)).getTotalExpenses();
                     customers.get(resultSet.getInt(1))
-                            .setTotalExpenses(total + (resultSet.getDouble(6)));
+                            .setTotalExpenses(total + (resultSet.getInt(6)));
                 } else {
                     List<Item> purchases = new ArrayList<>();
                     purchases.add(new Item(resultSet.getString(5),
@@ -102,21 +102,23 @@ public class DBRepository {
                     customers.put(resultSet.getInt(1),
                             new CustomerForStat(resultSet.getString(3)
                                     + " " + resultSet.getString(2),
-                                    purchases, resultSet.getDouble(6)));
+                                    purchases, resultSet.getInt(6)));
                 }
                 totalDays = resultSet.getInt(7);
             }
         } catch (SQLException e) {
-            System.out.println("connection not established ");
-            e.printStackTrace();
+            throw new CustomException("connection not established ");
         }
         for (CustomerForStat c : customers.values()) {
             totalExpenses = totalExpenses + c.getTotalExpenses();
-            avgExpenses = totalExpenses / customers.values().size();
+            avgExpenses = (double) totalExpenses / customers.values().size();
             BigDecimal bd = new BigDecimal(Double.toString(avgExpenses));
             bd = bd.setScale(2, RoundingMode.HALF_UP);
             avgExpenses = bd.doubleValue();
         }
-        return new StatResultDTO("stat", totalDays, new ArrayList<>(customers.values()), totalExpenses, avgExpenses);
+        List<CustomerForStat> customerForStatList = new ArrayList<>(customers.values());
+        customerForStatList.sort((c1, c2) -> c2.getTotalExpenses() - c1.getTotalExpenses());
+        customerForStatList.forEach(customerForStat -> customerForStat.getPurchases().sort((p1, p2) -> p2.getExpenses() - p1.getExpenses()));
+        return new StatResultDTO("stat", totalDays, customerForStatList, totalExpenses, avgExpenses);
     }
 }
