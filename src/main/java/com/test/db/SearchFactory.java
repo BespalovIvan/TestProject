@@ -1,6 +1,7 @@
 package com.test.db;
 
-import com.test.db.repository.DBRepository;
+import com.test.db.repository.SearchRepo;
+import com.test.db.repository.StatRepo;
 import com.test.db.service.CustomerService;
 import com.test.db.service.FileService;
 import com.test.db.service.impl.CustomerSearch;
@@ -11,11 +12,11 @@ public class SearchFactory {
     public static CustomerService createCustomerService(String type, FileService fileService) {
         switch (type) {
             case "search":
-                return new CustomerSearch(fileService, new DBRepository());
+                return new CustomerSearch(fileService, new SearchRepo());
             case "stat":
-                return new CustomerStat(fileService, new DBRepository());
+                return new CustomerStat(fileService, new StatRepo());
             default:
-                throw new IllegalArgumentException("Неверный тип поиска: " + type);
+                throw new IllegalArgumentException("invalid search type: " + type);
         }
     }
 }

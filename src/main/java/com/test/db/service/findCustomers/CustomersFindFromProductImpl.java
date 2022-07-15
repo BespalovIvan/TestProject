@@ -3,7 +3,7 @@ package com.test.db.service.findCustomers;
 import com.test.db.domain.dto.SearchResultDTO;
 import com.test.db.domain.entities.Customer;
 import com.test.db.domain.results.ResultSearch;
-import com.test.db.repository.DBRepository;
+import com.test.db.repository.SearchRepo;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -13,16 +13,16 @@ import java.util.Map;
 public class CustomersFindFromProductImpl implements CustomersFindService {
 
     private final JSONObject criteria;
-    private final DBRepository dbRepository;
+    private final SearchRepo searchRepo;
 
-    public CustomersFindFromProductImpl(JSONObject criteria, DBRepository dbRepository) {
+    public CustomersFindFromProductImpl(JSONObject criteria, SearchRepo searchRepo) {
         this.criteria = criteria;
-        this.dbRepository = dbRepository;
+        this.searchRepo = searchRepo;
     }
 
     @Override
     public void find(SearchResultDTO resultDTO) {
-        List<Customer> customers = dbRepository
+        List<Customer> customers = searchRepo
                 .findCustomersFromProductNameAndMinCount(criteria.optString("productName"),
                         Integer.parseInt(criteria.optString("minTimes")));
 

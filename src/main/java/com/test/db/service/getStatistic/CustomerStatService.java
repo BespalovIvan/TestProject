@@ -4,5 +4,5 @@ import com.test.db.domain.dto.StatResultDTO;
 
 public interface CustomerStatService {
 
-    void findStat(StatResultDTO resultDTO);
+    StatResultDTO findStat();
 }

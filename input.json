@@ -1,4 +1,8 @@
 {
-  "startDate": "2022-05-14",
-  "endDate": "2022-05-17"
+  "criteria": [
+    {"lastName": "Ivanov"},
+    {"productName": "Bread", "minTimes": 3},
+    {"minExpenses": 300, "maxExpenses": 500},
+    {"badCustomers": 3}
+  ]
 }

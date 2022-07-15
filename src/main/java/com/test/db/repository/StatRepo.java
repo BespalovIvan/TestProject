@@ -2,7 +2,6 @@ package com.test.db.repository;
 
 import com.test.db.config.PostgresConnection;
 import com.test.db.domain.dto.StatResultDTO;
-import com.test.db.domain.entities.Customer;
 import com.test.db.domain.entities.CustomerForStat;
 import com.test.db.domain.entities.Item;
 import com.test.db.exception.CustomException;
@@ -12,63 +11,12 @@ import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class DBRepository {
-
-    public List<Customer> findCustomersFromLastName(String lastname) {
-
-        return executeQueryWithFindCustomers(String.format("SELECT * FROM customers WHERE UPPER(last_name)='%s'",
-                lastname.toUpperCase()));
-    }
-
-    public List<Customer> findCustomersFromProductNameAndMinCount(String productName, int minCount) {
-        String query = String.format("SELECT cus.id, first_name,last_name,product_name \n" +
-                "FROM customers cus \n" +
-                "JOIN purchases pur ON (cus.id = pur.customer_id) \n" +
-                "JOIN items it ON (it.id = pur.item_id) WHERE UPPER(product_name) = '%s' \n" +
-                "GROUP BY first_name,last_name,product_name,cus.id \n" +
-                "HAVING count(*)>=%d;\n", productName.toUpperCase(), minCount);
-        return executeQueryWithFindCustomers(query);
-    }
-
-    public List<Customer> findCustomerFromMinAndMaxExpenses(int minExpenses, int maxExpenses) {
-        String query = String.format("SELECT cus.id,first_name,last_name\n" +
-                "FROM customers cus \n" +
-                "JOIN purchases pur ON (cus.id = pur.customer_id) \n" +
-                "JOIN items it ON (it.id = pur.item_id) \n" +
-                "GROUP BY first_name, last_name, cus.id \n" +
-                "HAVING SUM(price) BETWEEN %d and %d; \n", minExpenses, maxExpenses);
-        return executeQueryWithFindCustomers(query);
-    }
-
-    public List<Customer> findBadCustomers(int countBadCustomers) {
-        String query = String.format("SELECT cus.id, first_name,last_name \n" +
-                "FROM customers cus \n" +
-                "JOIN purchases pur ON (cus.id = pur.customer_id) \n" +
-                "GROUP BY first_name, last_name,cus.id \n" +
-                "ORDER BY count(*) \n" +
-                "LIMIT %d;", countBadCustomers);
-        return executeQueryWithFindCustomers(query);
-    }
-
-    private List<Customer> executeQueryWithFindCustomers(String query) {
-        List<Customer> customers = new ArrayList<>();
-        try (Statement statement = PostgresConnection.getConnection().createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
-            while (resultSet.next()) {
-                customers.add(new Customer(resultSet.getString(3), resultSet.getString(2)));
-            }
-        } catch (SQLException e) {
-            throw new CustomException("connection not established");
-        }
-        if (customers.isEmpty()) {
-            throw new NoSuchElementException("Customers not found");
-        }
-
-        return customers;
-    }
-
+public class StatRepo {
     public StatResultDTO getStat(String startDate, String endDate) {
         String queryGetCustomers = String.format("select c.id, first_name, last_name,i.id, " +
                 "product_name,SUM(price), \n" +
@@ -81,12 +29,16 @@ public class DBRepository {
                 "WHERE p.date BETWEEN TO_DATE('%s','YYYY-MM-DD') and TO_DATE('%s','YYYY-MM-DD') " +
                 "and extract(dow from p.date) != 5 and  extract(dow from p.date) != 6\n" +
                 "GROUP BY c.id, c.first_name, last_name,product_name,i.id;", startDate, endDate, startDate, endDate);
+        return executeQueryWithGetStat(queryGetCustomers);
+    }
+
+    private StatResultDTO executeQueryWithGetStat(String query) {
         Map<Integer, CustomerForStat> customers = new HashMap<>();
         int totalDays = 0;
         int totalExpenses = 0;
         double avgExpenses = 0.0;
         try (Statement statement = PostgresConnection.getConnection().createStatement();
-             ResultSet resultSet = statement.executeQuery(queryGetCustomers)) {
+             ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
                 if (customers.containsKey(resultSet.getInt(1))) {
                     customers.get(resultSet.getInt(1))
@@ -107,7 +59,7 @@ public class DBRepository {
                 totalDays = resultSet.getInt(7);
             }
         } catch (SQLException e) {
-            throw new CustomException("connection not established ");
+            throw new CustomException("wrong date format");
         }
         for (CustomerForStat c : customers.values()) {
             totalExpenses = totalExpenses + c.getTotalExpenses();
@@ -118,7 +70,11 @@ public class DBRepository {
         }
         List<CustomerForStat> customerForStatList = new ArrayList<>(customers.values());
         customerForStatList.sort((c1, c2) -> c2.getTotalExpenses() - c1.getTotalExpenses());
-        customerForStatList.forEach(customerForStat -> customerForStat.getPurchases().sort((p1, p2) -> p2.getExpenses() - p1.getExpenses()));
+        customerForStatList.forEach(customerForStat -> customerForStat.getPurchases()
+                .sort((p1, p2) -> p2.getExpenses() - p1.getExpenses()));
+        if (customerForStatList.isEmpty()) {
+            throw new CustomException("there were no customers who bought goods on these dates");
+        }
         return new StatResultDTO("stat", totalDays, customerForStatList, totalExpenses, avgExpenses);
     }
 }

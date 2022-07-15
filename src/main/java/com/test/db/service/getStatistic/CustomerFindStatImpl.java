@@ -1,26 +1,22 @@
 package com.test.db.service.getStatistic;
 
 import com.test.db.domain.dto.StatResultDTO;
-import com.test.db.repository.DBRepository;
+import com.test.db.repository.StatRepo;
 import org.json.JSONObject;
 
 public class CustomerFindStatImpl implements CustomerStatService {
 
     private final JSONObject desiredDates;
-    private final DBRepository dbRepository;
+    private final StatRepo statRepo;
 
-    public CustomerFindStatImpl(JSONObject criteria, DBRepository dbRepository) {
+    public CustomerFindStatImpl(JSONObject criteria, StatRepo statRepo) {
         this.desiredDates = criteria;
-        this.dbRepository = dbRepository;
+        this.statRepo = statRepo;
     }
 
     @Override
-    public void findStat(StatResultDTO resultDTO) {
-        StatResultDTO result = dbRepository.getStat(desiredDates.optString("startDate"),
+    public StatResultDTO findStat() {
+        return statRepo.getStat(desiredDates.optString("startDate"),
                 desiredDates.optString("endDate"));
-        resultDTO.setTotalDays(result.getTotalDays());
-        resultDTO.setCustomers(result.getCustomers());
-        resultDTO.setTotalExpenses(result.getTotalExpenses());
-        resultDTO.setAvgExpenses(result.getAvgExpenses());
     }
 }

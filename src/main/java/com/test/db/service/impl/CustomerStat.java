@@ -3,7 +3,7 @@ package com.test.db.service.impl;
 import com.test.db.domain.dto.ResultDTO;
 import com.test.db.domain.dto.StatResultDTO;
 import com.test.db.exception.CustomException;
-import com.test.db.repository.DBRepository;
+import com.test.db.repository.StatRepo;
 import com.test.db.service.CustomerService;
 import com.test.db.service.FileService;
 import com.test.db.service.getStatistic.CustomerFindStatImpl;
@@ -11,12 +11,12 @@ import org.json.JSONObject;
 
 public class CustomerStat extends CustomerService {
 
-    private final DBRepository dbRepository;
-    private final StatResultDTO resultDTO = new StatResultDTO("stat");
+    private final StatRepo statRepo;
+    private StatResultDTO resultDTO = new StatResultDTO("stat");
 
-    public CustomerStat(FileService fileService, DBRepository dbRepository) {
+    public CustomerStat(FileService fileService, StatRepo searchRepo) {
         super(fileService);
-        this.dbRepository = dbRepository;
+        this.statRepo = searchRepo;
     }
 
     @Override
@@ -26,6 +26,6 @@ public class CustomerStat extends CustomerService {
 
     @Override
     public void readJSONAndFind(JSONObject fileObject) throws CustomException {
-        new CustomerFindStatImpl(fileObject, dbRepository).findStat(resultDTO);
+        resultDTO = new CustomerFindStatImpl(fileObject, statRepo).findStat();
     }
 }

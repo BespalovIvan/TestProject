@@ -27,10 +27,9 @@ public class FileServiceImpl implements FileService {
         try {
             inputJson = new Scanner(new File(inputFile)).useDelimiter("\\Z").next();
         } catch (FileNotFoundException e) {
-            throw new CustomException(String.format("Файл %s не найден", inputFile));
+            throw new CustomException(String.format("File %s not found", inputFile));
         }
-
-        if (inputJson == null) throw new CustomException("Не удалось распарсить json");
+        if (inputJson == null) throw new CustomException("failed to parse json");
         return new JSONObject(inputJson);
     }
 
@@ -40,7 +39,7 @@ public class FileServiceImpl implements FileService {
             ObjectMapper mapper = new ObjectMapper();
             mapper.writerWithDefaultPrettyPrinter().writeValue(new File(outputFile), result);
         } catch (IOException e) {
-            throw new CustomException("Не удалось записать файл");
+            throw new CustomException("failed to write file");
         }
     }
 }

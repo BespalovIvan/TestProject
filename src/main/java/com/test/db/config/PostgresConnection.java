@@ -1,5 +1,7 @@
 package com.test.db.config;
 
+import com.test.db.exception.CustomException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -39,7 +41,7 @@ public final class PostgresConnection {
             BufferedReader bf = Files.newBufferedReader(myPath, StandardCharsets.UTF_8);
             props.load(bf);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            throw new CustomException("Properties not found");
         }
         return props;
     }

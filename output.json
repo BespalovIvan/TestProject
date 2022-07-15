@@ -1,46 +1,56 @@
 {
-  "type" : "stat",
-  "totalDays" : 2,
-  "customers" : [ {
-    "name" : "Petrov Alexandr",
-    "purchases" : [ {
-      "name" : "sausage",
-      "expenses" : 180
+  "type" : "search",
+  "results" : [ {
+    "criteria" : {
+      "lastName" : "Ivanov"
+    },
+    "results" : [ {
+      "lastname" : "Ivanov",
+      "firstname" : "Ivan"
     }, {
-      "name" : "cheese",
-      "expenses" : 150
+      "lastname" : "Ivanov",
+      "firstname" : "Egor"
     }, {
-      "name" : "mineral water",
-      "expenses" : 40
-    }, {
-      "name" : "bread",
-      "expenses" : 30
-    } ],
-    "totalExpenses" : 400
+      "lastname" : "Ivanov",
+      "firstname" : "Alexandr"
+    } ]
   }, {
-    "name" : "Leskov Kirill",
-    "purchases" : [ {
-      "name" : "cheese",
-      "expenses" : 150
+    "criteria" : {
+      "minTimes" : "3",
+      "productName" : "Bread"
+    },
+    "results" : [ {
+      "lastname" : "Ivanov",
+      "firstname" : "Ivan"
     }, {
-      "name" : "milk",
-      "expenses" : 60
-    }, {
-      "name" : "bread",
-      "expenses" : 30
-    } ],
-    "totalExpenses" : 240
+      "lastname" : "Petrov",
+      "firstname" : "Alexandr"
+    } ]
   }, {
-    "name" : "Sidorov Petr",
-    "purchases" : [ {
-      "name" : "mineral water",
-      "expenses" : 40
+    "criteria" : {
+      "minExpenses" : "300",
+      "maxExpenses" : "500"
+    },
+    "results" : [ {
+      "lastname" : "Kotov",
+      "firstname" : "Igor"
     }, {
-      "name" : "bread",
-      "expenses" : 30
-    } ],
-    "totalExpenses" : 70
-  } ],
-  "totalExpenses" : 710,
-  "avgExpenses" : 236.67
+      "lastname" : "Leskov",
+      "firstname" : "Kirill"
+    } ]
+  }, {
+    "criteria" : {
+      "badCustomers" : "3"
+    },
+    "results" : [ {
+      "lastname" : "Kotov",
+      "firstname" : "Igor"
+    }, {
+      "lastname" : "Sidorov",
+      "firstname" : "Petr"
+    }, {
+      "lastname" : "Leskov",
+      "firstname" : "Kirill"
+    } ]
+  } ]
 }

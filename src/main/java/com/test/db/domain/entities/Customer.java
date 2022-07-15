@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class Customer {
+
     @JsonIgnore
     private Integer id;
     private String lastname;

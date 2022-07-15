@@ -12,7 +12,9 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class CustomerForStat {
+
     private String name;
     private List<Item> purchases;
     private int totalExpenses;
+
 }
