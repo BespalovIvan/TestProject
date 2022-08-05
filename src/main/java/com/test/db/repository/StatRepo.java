@@ -72,9 +72,6 @@ public class StatRepo {
         customerForStatList.sort((c1, c2) -> c2.getTotalExpenses() - c1.getTotalExpenses());
         customerForStatList.forEach(customerForStat -> customerForStat.getPurchases()
                 .sort((p1, p2) -> p2.getExpenses() - p1.getExpenses()));
-        if (customerForStatList.isEmpty()) {
-            throw new CustomException("there were no customers who bought goods on these dates");
-        }
         return new StatResultDTO("stat", totalDays, customerForStatList, totalExpenses, avgExpenses);
     }
 }

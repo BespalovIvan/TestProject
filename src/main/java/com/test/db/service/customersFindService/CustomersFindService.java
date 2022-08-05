@@ -1,4 +1,4 @@
-package com.test.db.service.findCustomers;
+package com.test.db.service.customersFindService;
 
 import com.test.db.domain.dto.SearchResultDTO;
 

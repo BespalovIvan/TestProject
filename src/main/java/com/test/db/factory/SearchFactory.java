@@ -1,4 +1,4 @@
-package com.test.db;
+package com.test.db.factory;
 
 import com.test.db.repository.SearchRepo;
 import com.test.db.repository.StatRepo;

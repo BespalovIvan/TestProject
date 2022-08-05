@@ -10,13 +10,16 @@ public class CustomException extends RuntimeException {
 
     public CustomException(String message) {
         super(message);
+    }
+
+    public CustomException() {
 
     }
 
-    public void writeError(String outputFile, ErrorDTO message){
+    public void writeError(String outputFile, ErrorDTO message) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(outputFile),message);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(outputFile), message);
         } catch (IOException e) {
             throw new CustomException("file not found");
         }

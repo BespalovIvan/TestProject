@@ -1,4 +1,4 @@
-package com.test.db.service.findCustomers;
+package com.test.db.service.customersFindService;
 
 import com.test.db.domain.dto.SearchResultDTO;
 import com.test.db.domain.entities.Customer;
@@ -22,10 +22,10 @@ public class CustomersFindImpl implements CustomersFindService {
 
     @Override
     public void find(SearchResultDTO resultDTO) {
-        List<Customer> customer = searchRepo.findCustomersFromLastName(criteria.optString("lastName"));
+        List<Customer> customers = searchRepo.findCustomersFromLastName(criteria.optString("lastName"));
         Map<String, String> mapCriteria = new HashMap<>();
         mapCriteria.put("lastName", criteria.optString("lastName"));
-        ResultSearch resultSearch = new ResultSearch(mapCriteria, customer);
+        ResultSearch resultSearch = new ResultSearch(mapCriteria, customers);
         resultDTO.getResults().add(resultSearch);
     }
 }

@@ -6,7 +6,7 @@ import com.test.db.exception.CustomException;
 import com.test.db.repository.StatRepo;
 import com.test.db.service.CustomerService;
 import com.test.db.service.FileService;
-import com.test.db.service.getStatistic.CustomerFindStatImpl;
+import com.test.db.service.customerStatisticService.CustomerFindStatImpl;
 import org.json.JSONObject;
 
 public class CustomerStat extends CustomerService {

@@ -1,4 +1,4 @@
-package com.test.db.service.findCustomers;
+package com.test.db.service.customersFindService;
 
 import com.test.db.domain.dto.SearchResultDTO;
 import com.test.db.domain.entities.Customer;
@@ -10,12 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomersFindFromBadCustomersImpl implements CustomersFindService {
+public class CustomersFindFromProductImpl implements CustomersFindService {
 
     private final JSONObject criteria;
     private final SearchRepo searchRepo;
 
-    public CustomersFindFromBadCustomersImpl(JSONObject criteria, SearchRepo searchRepo) {
+    public CustomersFindFromProductImpl(JSONObject criteria, SearchRepo searchRepo) {
         this.criteria = criteria;
         this.searchRepo = searchRepo;
     }
@@ -23,10 +23,14 @@ public class CustomersFindFromBadCustomersImpl implements CustomersFindService {
     @Override
     public void find(SearchResultDTO resultDTO) {
         List<Customer> customers = searchRepo
-                .findBadCustomers(Integer.parseInt(criteria.optString("badCustomers")));
+                .findCustomersFromProductNameAndMinCount(criteria.optString("productName"),
+                        Integer.parseInt(criteria.optString("minTimes")));
+
         Map<String, String> mapCriteria = new HashMap<>();
-        mapCriteria.put("badCustomers", criteria.optString("badCustomers"));
+        mapCriteria.put("productName", criteria.optString("productName"));
+        mapCriteria.put("minTimes", criteria.optString("minTimes"));
         ResultSearch resultSearch = new ResultSearch(mapCriteria, customers);
         resultDTO.getResults().add(resultSearch);
     }
+
 }

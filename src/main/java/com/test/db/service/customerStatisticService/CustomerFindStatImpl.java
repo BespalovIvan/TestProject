@@ -1,6 +1,7 @@
-package com.test.db.service.getStatistic;
+package com.test.db.service.customerStatisticService;
 
 import com.test.db.domain.dto.StatResultDTO;
+import com.test.db.exception.CustomException;
 import com.test.db.repository.StatRepo;
 import org.json.JSONObject;
 
@@ -16,7 +17,14 @@ public class CustomerFindStatImpl implements CustomerStatService {
 
     @Override
     public StatResultDTO findStat() {
-        return statRepo.getStat(desiredDates.optString("startDate"),
+        if (desiredDates.optString("startDate").isEmpty() || desiredDates.optString("endDate").isEmpty()) {
+            throw new CustomException("dates not found");
+        }
+        StatResultDTO stat = statRepo.getStat(desiredDates.optString("startDate"),
                 desiredDates.optString("endDate"));
+        if(stat.getCustomers().isEmpty()){
+            throw new CustomException("no customers on the dates");
+        }
+        return stat;
     }
 }

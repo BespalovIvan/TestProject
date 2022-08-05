@@ -4,7 +4,7 @@ import com.test.db.domain.dto.ResultDTO;
 import com.test.db.domain.dto.SearchResultDTO;
 import com.test.db.exception.CustomException;
 import com.test.db.repository.SearchRepo;
-import com.test.db.service.CriteriaFactory;
+import com.test.db.factory.CriteriaFactory;
 import com.test.db.service.CustomerService;
 import com.test.db.service.FileService;
 import org.json.JSONArray;

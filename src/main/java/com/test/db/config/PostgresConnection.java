@@ -13,7 +13,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-//Singleton
 public final class PostgresConnection {
 
     private static Connection connection = null;
@@ -21,17 +20,23 @@ public final class PostgresConnection {
     private PostgresConnection() {
     }
 
-    public static synchronized Connection getConnection() throws SQLException {
-        if (connection == null) connection = createConnection();
+    public static synchronized Connection getConnection() {
+        if (connection == null) {
+            connection = createConnection();
+        }
         return connection;
     }
 
-    private static Connection createConnection() throws SQLException {
+    private static Connection createConnection() {
         Properties properties = readProperties();
         String url = properties.getProperty("db.url");
         String user = properties.getProperty("db.user");
         String password = properties.getProperty("db.password");
-        return DriverManager.getConnection(url, user, password);
+        try {
+            return DriverManager.getConnection(url, user, password);
+        } catch (SQLException e) {
+            throw new CustomException("connection not established");
+        }
     }
 
     private static Properties readProperties() {

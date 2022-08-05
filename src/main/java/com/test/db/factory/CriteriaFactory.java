@@ -1,8 +1,8 @@
-package com.test.db.service;
+package com.test.db.factory;
 
 import com.test.db.exception.CustomException;
 import com.test.db.repository.SearchRepo;
-import com.test.db.service.findCustomers.*;
+import com.test.db.service.customersFindService.*;
 import org.json.JSONArray;
 
 public class CriteriaFactory {
